@@ -1,3 +1,6 @@
+body {
+    text-align: center;
+}
 .logo {
     height: 25px;
     width: 25px;
@@ -6,6 +9,7 @@
     align-items: center;
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
 .destination {
     width: 300px;
@@ -18,4 +22,9 @@
     height: 100%;
     object-fit:cover;
     display: inline-flex;
+}
+.destination_link {
+    height: 100%;
+    width: 100%;
+    display: block;
 }
