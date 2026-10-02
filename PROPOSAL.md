@@ -103,8 +103,8 @@ The finished app will have:
 
 | Member | Slice | Includes | Issues |
 |---|---|---|---|
-| **Lesley Ozurigbo** | Destination Details | Build the routed detail page with available destination information, images, and points of interest. Fetch the selected destination using its URL parameter and handle missing or invalid destinations. Test detail rendering and error states. | Build home page |
-| **Rameen** | Home Page and Destination Discovery | Build the introductory home/list page, destination cards, search, country filtering, and sorting. Connect results to the data layer and handle loading, error, and empty states. Test search and filtering behaviour. | Browse Destinations Page |
+| **Lesley Ozurigbo** | Destination Details | Build the routed detail page with available destination information, images, and points of interest. Fetch the selected destination using its URL parameter and handle missing or invalid destinations. Test detail rendering and error states. | Browse Destinations Page |
+| **Rameen** | Home Page and Destination Discovery | Build the introductory home/list page, destination cards, search, country filtering, and sorting. Connect results to the data layer and handle loading, error, and empty states. Test search and filtering behaviour. | Build home page |
 | **Daniel Allen** | Trip Itinerary Planner | Build a controlled form for creating and editing a trip, including dates, activities, and notes. Validate entries and persist plans locally. Test validation and saving. Also lead shared backend setup. | Search, filter by country, sort A–Z |
 | **Zainab** | Saved Destinations | Build save/remove controls and a dedicated favorites page. Manage saved destinations through a custom hook or Context with localStorage, including empty states. Test persistence and removal. | Saved Destinations: save/remove buttons + Saved page |
 | **Daniel Bryon** | API Integration & Shared Data Setup | Build the shared API layer/service module to get destination and activity data. Create the base TypeScript interface/data model and manage networking with proper error handling and loading behavior, and provide utility functions/fallback mocks for the team. | Shared data/API setup, API integration service, destination & activity data fetching models |
@@ -114,6 +114,7 @@ The finished app will have:
 ## 5. Wireframes
 
 
+<img width="960" height="782" alt="Image of pages wireframe" src="https://github.com/user-attachments/assets/92563edb-8ba3-4457-a29f-c3c6190eea1c" />
 
 
 
