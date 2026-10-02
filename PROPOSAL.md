@@ -25,7 +25,7 @@ Journeys Uncharted is a travel discovery and planning application for budget-con
 |---|---|---|
 | **Nominatim** (OpenStreetMap search) - https://nominatim.org/release-docs/latest/api/Search/ | City name, country, coordinates, population, Wikipedia/Wikidata link | Browse cards, Details, Compare |
 | **Overpass API** (OpenStreetMap data, via Private.coffee) - https://turbo.overpass.private.coffee/ | Restaurants, businesses, and attractions near a city | Details, Compare |
-| **IsItSafeToTravel** — https://isitsafetotravel.org/en/ | Country safety score (1–10), risk categories, government advisory levels | Browse cards, Details, Compare |
+| **IsItSafeToTravel** - https://isitsafetotravel.org/en/ | Country safety score (1–10), risk categories, government advisory levels | Browse cards, Details, Compare |
 
 ### Endpoints
 
@@ -59,19 +59,6 @@ Journeys Uncharted is a travel discovery and planning application for budget-con
 }
 ```
 
-**Nominatim**
-
-```json
-TODO: paste one trimmed result (name, address.country, lat, lon, extratags.population)
-```
-
-**Overpass**
-
-```json
-TODO: paste 2–3 trimmed elements (tags.name, tags.amenity/tourism, lat, lon)
-```
-
----
 
 ## 3. Comparators
 
@@ -81,15 +68,14 @@ TODO: paste 2–3 trimmed elements (tags.name, tags.amenity/tourism, lat, lon)
 - Lists popular vacation destinations
 - Offers buying tickets and booking hotels through their website
 - Lists popular events at a specific destination
-- Lets users leave comments and reviews on events and hotels
+- Let's users leave comments and reviews on events and hotels
 
 **How our app differs:** Our app will focus on providing a simpler destination-browsing and trip-planning experience, combining destination details with the core travel information needed to plan a trip.
 
-<!-- TODO: make this concrete, e.g. what we show at a glance that TripAdvisor doesn't. -->
 
 ### Trip Central - https://www.tripcentral.ca/
 
-- Lets users book vacations and compare different flight prices
+- Let's users book vacations and compare different flight prices
 - Includes flights, cruises, tours, and hotels
 - Does not include things to do at a specific location
 - Can't leave comments and reviews
