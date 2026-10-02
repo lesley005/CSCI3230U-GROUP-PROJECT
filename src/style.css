@@ -28,6 +28,23 @@ body {
     width: 100%;
     display: block;
 }
+table thead th tr {
+    padding-left:40px;
+    padding-right: 40px;
+    border-bottom: 2px solid black;
+}
+
+.wishlist {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 25px;
+}
+
+#wishlist_body {
+    width: 30%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
 
 /* Lesley - prototype styling */
 
