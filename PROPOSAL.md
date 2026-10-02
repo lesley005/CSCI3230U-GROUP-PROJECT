@@ -74,7 +74,7 @@ Journeys Uncharted is a travel discovery and planning application for budget-con
     }
   ]
 }
-
+```
 
 
 ## 3. Comparators
