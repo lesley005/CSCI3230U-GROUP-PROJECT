@@ -1,6 +1,6 @@
 # Journeys Uncharted - Project Proposal (Milestone 1)
 
-**Team:** Lesley Ozurigbo · Rameen · Daniel Allen · Zainab · Daniel Bryon
+**Team:** Lesley Ozurigbo · Rameen Khan· Daniel Allen · Zainab Sohail· Daniel Bryon
 
 ## Contents
 
@@ -11,13 +11,10 @@
 5. [Wireframes](#5-wireframes)
 6. [What's next](#6-whats-next)
 
----
 
 ## 1. Topic
 
 Journeys Uncharted is a travel discovery and planning application for budget-conscious travelers and people exploring unfamiliar destinations. Users will be able to browse cities, search and filter destinations, explore destination details, save favorites, and organize a personal trip itinerary. Our goal is to bring destination research and practical planning into one accessible interface, helping users make informed choices about where to go and what to do. Where supported by our chosen data sources, destination pages will also include cost and safety information.
-
----
 
 ## 2. Data source
 
@@ -77,7 +74,7 @@ Journeys Uncharted is a travel discovery and planning application for budget-con
     }
   ]
 }
-```
+
 
 
 ## 3. Comparators
@@ -119,7 +116,7 @@ The finished app will have:
 - **Works for everyone:** usable with a keyboard, readable colors, labeled inputs, and looks good on phone and desktop.
 - **Tested and live:** automated tests for key parts, and the finished site is online.
 
-### Vertical slices — who owns what
+### Vertical slices - who owns what
 
 | Member | Slice | Includes | Issues |
 |---|---|---|---|
