@@ -2,27 +2,148 @@
 <html lang="">
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Journey's Uncharted</title>
     <link rel="stylesheet" href="/style.css">
   </head>
-  <body>
+  <body class="home-page">
     <header>
       <nav id="navbar">
-        <img class="logo" src="/resources/images/icon.png" alt="Journey's Uncharted Logo">
-        <span class="header_links">
-          <a href="/index.html" class="link active">Journey's Uncharted</a>
+        <a href="index.html" class="site-brand">
+          <img class="logo" src="/resources/images/icon.png?v=2" alt="Journey's Uncharted Logo">
+          <span>Journey's Uncharted</span>
+        </a>
+
+        <div class="header_links">
           <a href="/destinations.html" class="link inactive">Destinations</a>
           <a href="/itinerary.html" class="link inactive">Itinerary</a>
           <a href="/wishlist.html" class="link inactive">Wishlist</a>
-        </span>
+        </div>
       </nav>
     </header>
-    <main>
-      <div class="index_body">
-        <div class="search_body">
-          <input id="searchbar" type="text" placeholder="Search...">
+    <main class="home-main">
+      <section class="home-intro">
+        <h1 id="home-title">Find your next destination!</h1>
+        <p>
+          Explore new places, discover things to do, and start planning your next adventure.
+        </p>
+
+        <div class="home-search">
+          <div class="home-field">
+            <label for="searchbar">Search destinations</label>
+            <input
+              id="searchbar"
+              type="search"
+              placeholder="Enter a city or country"
+            >
+          </div>
+
+          <button class="home-button" type="button">
+            Search
+          </button>
         </div>
-      </div>
+
+        <div class="home-filters">
+          <div class="home-field">
+            <label for="home-country">Country</label>
+            <select id="home-country">
+              <option>All countries</option>
+              <option>Canada</option>
+              <option>France</option>
+              <option>Japan</option>
+            </select>
+          </div>
+
+          <div class="home-field">
+            <label for="home-sort">Sort Destinations</label>
+            <select id="home-sort">
+              <option>Name: A-Z</option>
+              <option>Name: Z-A</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="home-explore">
+        <h2 id="explore-title">Explore Destinations</h2>
+
+        <div class="home-grid">
+          <article class="home-card">
+            <div class="home-image-placeholder">
+              <img class="home-card-image" src="https://upload.wikimedia.org/wikipedia/commons/a/ab/Toronto_Skyline_viewed_from_Algonquin_Island_%2816-9_crop%29.jpg?utm_source=kai.wikipedia.org&utm_campaign=index&utm_content=original">
+            </div>
+
+            <div class="home-card-content">
+              <h3>Toronto, Canada</h3>
+            </div>
+
+            <div class="home-card-actions">
+              <button
+                class="home-save-button"
+                type="button"
+              >
+                Save
+              </button>
+              <button
+                class="home-details-button"
+                type="button"
+              >
+                View Details
+              </button>
+            </div>
+          </article>
+
+          <article class="home-card">
+            <div class="home-image-placeholder">
+              <img class="home-card-image" src="https://upload.wikimedia.org/wikipedia/commons/b/b2/Centre_Block_-_Parliament_Hill.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original">
+            </div>
+
+            <div class="home-card-content">
+              <h3>Ottawa, Canada</h3>
+            </div>
+
+            <div class="home-card-actions">
+              <button
+                class="home-save-button"
+                type="button"
+              >
+                Save
+              </button>
+              <button
+                class="home-details-button"
+                type="button"
+              >
+                View Details
+              </button>
+            </div>
+          </article>
+
+          <article class="home-card">
+            <div class="home-image-placeholder">
+              <img class="home-card-image" src="https://upload.wikimedia.org/wikipedia/commons/9/90/Quebec_City_skyline_aerial_view.jpg?utm_source=commons.wikimedia.org&utm_campaign=index&utm_content=original">
+            </div>
+
+            <div class="home-card-content">
+              <h3>Quebec City, Canada</h3>
+            </div>
+
+            <div class="home-card-actions">
+              <button
+                class="home-save-button"
+                type="button"
+              >
+                Save
+              </button>
+              <button
+                class="home-details-button"
+                type="button"
+              >
+                View Details
+              </button>
+            </div>
+          </article>
+        </div>
+      </section>
     </main>
     <footer></footer>
   </body>
