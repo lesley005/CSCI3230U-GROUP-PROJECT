@@ -1,3 +1,10 @@
+:root{
+    --cream: #FFFAF2;
+    --mint: #C7F0E3;
+    --teal: #267568;
+    --blue: #246A96;
+    --navy: #2B3A67;
+}
 body {
     text-align: center;
 }
@@ -45,6 +52,29 @@ table thead th tr {
     max-width: 1200px;
     margin: 40px auto;
 }
+
+#itinerary_type_filter_container {
+    flex: 1;
+    min-width: 0;
+    margin: 25px;
+}
+#itinerary_type_filter_container label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+#itinerary_type_filter_container select {
+    width: 50%;
+    min-height: 50px;
+    padding: 12px 14px;
+    border: 1px solid var(--teal);
+    border-radius: 8px;
+    background-color: var(--cream);
+    color: var(--navy);
+    font: inherit;
+}
+
 .itinerary_body {
     width: 90%;
     max-width: 1200px;
@@ -90,6 +120,14 @@ table thead th tr {
 .itinerary_item_type {
     text-align: right;
 }
+
+#add_custom_itinerary_event {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    background: white;
+}
+
 /* Lesley - prototype styling */
 
 /* page */
@@ -238,12 +276,6 @@ body {
 }
 
 .home-page {
-    --cream: #FFFAF2;
-    --mint: #C7F0E3;
-    --teal: #267568;
-    --blue: #246A96;
-    --navy: #2B3A67;
-
     margin: 0;
     background-color: var(--cream);
     color: var(--navy);
