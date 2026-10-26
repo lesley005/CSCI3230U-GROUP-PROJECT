@@ -45,7 +45,51 @@ table thead th tr {
     max-width: 1200px;
     margin: 40px auto;
 }
-
+.itinerary_body {
+    width: 90%;
+    max-width: 1200px;
+    margin: 40px auto;
+}
+#itinerary_events {
+    align-items: center;
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    justify-content: center;
+    gap: 25px;
+}
+.itinerary_item_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-bottom: 10px;
+}
+.itinerary_item_body {
+    display: flex;
+}
+.itinerary_item_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 10px;
+}
+.itinerary_item {
+    width: auto;
+    height: auto;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.itinerary_item_title {
+    text-align: left;
+}
+.itinerary_item_notes {
+    text-align: left;
+}
+.itinerary_item_type {
+    text-align: right;
+}
 /* Lesley - prototype styling */
 
 /* page */

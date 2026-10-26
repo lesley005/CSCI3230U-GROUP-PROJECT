@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Journey's Uncharted</title>
     <link rel="stylesheet" href="/style.css">
+    <script type="module" src="scripts/itinerary.ts"></script>
   </head>
   <body>
     <header>
@@ -15,22 +16,28 @@
 
         <div class="header_links">
           <a href="/destinations.html" class="link inactive">Destinations</a>
-          <a href="/itinerary.html" class="link inactive">Itinerary</a>
+          <a href="/itinerary.html" class="link active">Itinerary</a>
           <a href="/wishlist.html" class="link inactive">Wishlist</a>
         </div>
       </nav>
     </header>
     <main>
-      <div class="index_body">
-        <table>
-          <thead>
-            <th><td>Event</td><td>Location</td><td>Date</td><td>Time</td></th>
-          </thead>
-          <tbody>
-            <tr><td>Ristorante Sotto Sotto</td><td>120 Avenue Rd, Toronto, ON M5R 2H4</td><td>October 14, 2026</td><td>6:00pm</td></tr>
-            <tr><td>Earls Kitchen + Bar</td><td>55 Bloor St W Unit 113, Toronto, ON M4W 1A5</td><td>October 21, 2026</td><td>4:30pm</td></tr>
-          </tbody>
-        </table>
+      <div class="itinerary_body">
+        <div class="itinerary_type_filter_container">
+          <label for="itinerary_type_filter">Type</label>
+          <select id="itinerary_type_filter">
+            <option>All types</option>
+          </select>
+        </div>
+        <div id="itinerary_events">
+          <div class="itinerary_item">
+            <span class="itinerary_item_title">Event Name</span>
+            <span class="itinerary_item_type">Type</span>
+            <span class="itinerary_item_location">Location</span>
+            <span class="itinerary_item_start">Start</span>
+            <span class="itinerary_item_stop">Stop</span>
+          </div>
+        </div>
       </div>
     </main>
     <footer></footer>
