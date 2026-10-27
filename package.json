@@ -1,0 +1,14 @@
+{
+  "name": "journeysuncharted",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "node --test",
+    "dev": "vite src",
+    "build": "vite build src",
+    "preview": "vite preview src"
+  },
+  "devDependencies": {
+    "vite": "^8.3.5"
+  }
+}
