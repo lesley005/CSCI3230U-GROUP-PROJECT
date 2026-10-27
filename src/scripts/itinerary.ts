@@ -4,11 +4,6 @@ let list: HTMLDivElement = document.getElementById("itinerary_events")! as HTMLD
 let type_filter: HTMLSelectElement = document.getElementById("itinerary_type_filter")! as HTMLSelectElement
 let selected_filter: string = "All types"
 function generate_html_list(){
-    if(list == null || type_filter == null){
-        // This should never happen
-        console.error("Failed")
-        return
-    }
     list.innerHTML = ""
     for(let item of itinerary){
         if(selected_filter == "All types" || selected_filter === item.type){
