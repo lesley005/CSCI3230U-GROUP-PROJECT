@@ -125,7 +125,19 @@ table thead th tr {
     position: fixed;
     bottom: 50px;
     right: 50px;
-    background: white;
+    width: 50px;
+    height: 50px;
+    background-color: var(--teal);
+    color: var(--cream);
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+#add_custom_itinerary_event:hover{
+    transform: translate(0px,5px);
 }
 
 /* Lesley - prototype styling */
