@@ -1,0 +1,111 @@
+
+.destination-details {
+  max-width: 1000px;
+  margin: 50px auto;
+  padding: 0 24px 60px;
+  color: #293b68;
+  text-align: left;
+  box-sizing: border-box;
+}
+
+.destination-details section {
+  background-color: #fffaf2;
+  border: 1px solid #c2ebe3;
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 28px;
+}
+
+.destination-details h1 {
+  font-family: Georgia, serif;
+  font-size: 38px;
+  color: #293b68;
+  margin: 0 0 20px;
+  text-align: left;
+}
+
+.destination-details h2 {
+  font-family: Georgia, serif;
+  font-size: 28px;
+  color: #293b68;
+  margin: 0 0 20px;
+  text-align: left;
+}
+
+.destination-details p {
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 18px;
+  text-align: left;
+}
+
+.destination-details button {
+  background-color: #293b68;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.destination-details button:hover {
+  background-color: #1d2b50;
+}
+
+.destination-activities ul {
+  list-style-type: disc;
+  padding-left: 28px;
+  margin: 0;
+  text-align: left;
+}
+
+.destination-activities li {
+  font-size: 17px;
+  margin-bottom: 12px;
+  padding-left: 6px;
+  text-align: left;
+}
+
+.destination-restaurants table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.destination-restaurants th,
+.destination-restaurants td {
+  padding: 16px;
+  border-bottom: 1px solid #d9e7e2;
+  text-align: left;
+}
+
+.destination-restaurants th {
+  background-color: #c8efe5;
+  color: #293b68;
+  font-weight: bold;
+}
+
+.destination-restaurants tr:hover {
+  background-color: #f1faf7;
+}
+
+@media (max-width: 600px) {
+  .destination-details {
+    margin: 24px auto;
+    padding: 0 16px 40px;
+  }
+
+  .destination-details section {
+    padding: 20px;
+  }
+
+  .destination-details h1 {
+    font-size: 30px;
+  }
+
+  .destination-details h2 {
+    font-size: 24px;
+  }
+}
