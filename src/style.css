@@ -140,6 +140,42 @@ table thead th tr {
     transform: translate(0px,5px);
 }
 
+#create_itinerary_event_form {
+    width: fit-content;
+    display: none;
+    gap: 10px;
+    background-color: white;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    position: fixed;
+    top:40%;
+    bottom: 40%;
+    height: fit-content;
+    left: 40%;
+}
+#create_itinerary_event_form.shown{
+    display: grid;
+}
+.create_event_form_section {
+    width: 100%;
+    gap: 5px;
+    display: grid;
+
+}
+.create_event_form_section:last-child {
+    width: 100%;
+    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+#create_itinerary_event_form label{
+    text-align: right;
+    align-items: center;
+}
+#create_itinerary_event_form input{
+    text-align: left;
+    align-items: center;
+}
 /* Lesley - prototype styling */
 
 /* page */
