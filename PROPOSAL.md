@@ -12,6 +12,7 @@ Presentation: https://www.youtube.com/watch?v=CdOtM_onyKo
 4. [Feature plan](#4-feature-plan)
 5. [Wireframes](#5-wireframes)
 6. [What's next](#6-whats-next)
+7. [Milestone 2 – React Foundation](#7-milestone-2-react-foundation)
 
 
 ## 1. Topic
@@ -142,7 +143,7 @@ The finished app will have:
 - Review section for destinations (nice to have)
 - Add ratings to sort by
 
-  ## 7. Milestone 2 – React Foundation
+## 7. Milestone 2 – React Foundation
 
 ### Running the app
 ```bash
