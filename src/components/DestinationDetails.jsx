@@ -6,7 +6,17 @@ import "./DestinationDetails.css";
 
 function DestinationDetails({ destination }) {
   const [showMore, setShowMore] = useState(false);
+  if(destination === undefined){
+    return (
+      <main className="destination-details">
+      <section>
+        <h1>Error 404</h1>
 
+        <p>Unknown destination</p>
+      </section>
+    </main>
+    );
+  }
   return (
     <main className="destination-details">
       <section>
