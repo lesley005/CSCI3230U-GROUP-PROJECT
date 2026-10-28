@@ -28,6 +28,35 @@
       <div id="add_custom_itinerary_event">
           <span>+</span>
       </div>
+      <form id="create_itinerary_event_form">
+        <div class="create_event_form_section">
+          <label for="create_event_name">Name</label>
+          <input type="text" id="create_event_name" name="name" required>
+        </div>
+        <div class="create_event_form_section">
+          <label for="create_event_type">Type</label>
+          <input type="text" id="create_event_type" name="type" required/></div>
+        <div class="create_event_form_section">
+            <label for="create_event_description">Description</label>
+            <input type="text" id="create_event_description" name="description" required>
+        </div>
+        <div class="create_event_form_section">
+          <label for="create_event_location">Location</label>
+          <input type="text" id="create_event_location" name="location"/>
+        </div>
+        <div class="create_event_form_section">
+          <label for="create_event_date">Start</label>
+          <input type="datetime-local" id="create_event_date" name="start" required/>
+        </div>
+        <div class="create_event_form_section">
+          <label for="create_event_date">End</label>
+          <input type="datetime-local" id="create_event_date" name="end"/>
+        </div>
+        <div class="create_event_form_section">
+          <input id="create_event_close_button" value="Cancel" type="button"/>
+          <input type="submit" id="create_event_submit" value="Add">
+        </div>
+      </form>
     </main>
     <footer></footer>
     <script type="module" src="/scripts/itinerary.tsx"></script>
