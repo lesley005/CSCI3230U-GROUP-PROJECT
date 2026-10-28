@@ -31,7 +31,7 @@ function DestinationDetails({ destination }) {
           </p>
         )}
 
-        <button onClick={() => setShowMore(!showMore)}>
+        <button onClick={() => setShowMore(prev => !prev)}>
           {showMore ? "Show Less" : "Show More"}
         </button>
       </section>
