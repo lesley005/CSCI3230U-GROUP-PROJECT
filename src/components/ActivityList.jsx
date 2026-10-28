@@ -4,7 +4,7 @@ function ActivityList({ activities }) {
     <section className="destination-activities">
       <h2>Fun things to do</h2>
 
-      {activities.length > 0 ? (
+      {activities !== undefined && activities.length > 0 ? (
         <ul>
           {activities.map((activity) => (
             <li key={activity.id}>

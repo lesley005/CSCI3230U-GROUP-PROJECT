@@ -4,7 +4,7 @@ function RestaurantList({ restaurants }) {
     <section className="destination-restaurants">
       <h2>Great places to eat</h2>
 
-      {restaurants.length > 0 ? (
+      {restaurants !== undefined && restaurants.length > 0 ? (
         <table>
           <thead>
             <tr>

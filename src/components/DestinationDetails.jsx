@@ -7,7 +7,17 @@ import SaveButton from "./SaveButton";
 
 function DestinationDetails({ destination }) {
   const [showMore, setShowMore] = useState(false);
+  if(destination === undefined){
+    return (
+      <main className="destination-details">
+      <section>
+        <h1>Error 404</h1>
 
+        <p>Unknown destination</p>
+      </section>
+    </main>
+    );
+  }
   return (
     <main className="destination-details">
       <section>
@@ -23,7 +33,7 @@ function DestinationDetails({ destination }) {
           </p>
         )}
 
-        <button onClick={() => setShowMore(!showMore)}>
+        <button onClick={() => setShowMore(prev => !prev)}>
           {showMore ? "Show Less" : "Show More"}
         </button>
       </section>
