@@ -141,3 +141,40 @@ The finished app will have:
 
 - Review section for destinations (nice to have)
 - Add ratings to sort by
+
+  ## 7. Milestone 2 – React Foundation
+
+### Running the app
+```bash
+npm install
+npm run dev
+```
+Open the printed URL (e.g. http://localhost:5173).
+
+| Page | URL |
+|---|---|
+| Home / Browse | `/` |
+| Destination Details | `/destinations/toronto_ontario.html` |
+| Itinerary | `/itinerary.html` |
+| Wishlist (Saved) | `/wishlist.html` |
+
+### What each member built
+
+| Member | M2 work | React concepts used |
+|---|---|---|
+| **Lesley Ozurigbo** | Destination Details page in React (`DestinationDetails`, `ActivityList`, `RestaurantList`); shared `destinations.js` data file; Vite + React setup | Components with props, `useState` (Show More toggle), `.map` with keys, 404 state for unknown destinations |
+| **Rameen Khan** | Home page in React (`HomePage`, `HomeDestinationCard`) with search, country filter and A–Z / Z–A sort | Controlled inputs, `useState`, filtering/sorting, Save and Quick Info toggles, empty state |
+| **Daniel Allen** | Itinerary page in React with type filter | `useState`, `.map` with keys, filter by type, empty state, reads itinerary from localStorage |
+| **Zainab Sohail** | Wishlist page in React (`Wishlist`, `DestinationCard`), reusable `SaveButton` on the Details page; added Quebec City, Edmonton and Banff to `destinations.js` | Components with props, `useState` (saved ids), Remove event handling, `.map` with `key={d.id}`, empty state with browse link |
+| **Daniel Bryon** | 
+
+### Core experience (mock data)
+- **Browse the collection:** home page cards rendered from `src/data/destinations.js`
+- **Open an item:** View Details opens a destination page
+- **Toggle state:** Save / Saved, Show More, Quick Info, Remove from wishlist, filters
+
+### Known limitations - next milestone
+- Saved destinations aren't shared between pages yet, and they reset on refresh. Next, Zainab will add a `useSavedDestinations` hook with localStorage so home, details and wishlist share one saved list.
+- Only Toronto has a details page so far.
+- Data is mock data in `destinations.js`. The live API (Nominatim / Overpass / IsItSafeToTravel) comes next.
+- Tests are still to be added.
