@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>Journey's Uncharted</title>
     <link rel="stylesheet" href="/style.css">
-    <script type="module" src="scripts/itinerary.ts"></script>
+    <script type="module" src="scripts/itinerary.tsx"></script>
   </head>
   <body>
     <header>
@@ -22,33 +22,14 @@
       </nav>
     </header>
     <main>
-      <div class="itinerary_body">
-        <div id="itinerary_type_filter_container">
-          <label for="itinerary_type_filter">Type</label>
-          <select id="itinerary_type_filter">
-            <option>All types</option>
-          </select>
+      <div id="itinerary_body" class="itinerary_body">
         </div>
-        <div id="itinerary_events">
-          <div class="itinerary_item">
-            <div class="itinerary_item_header">
-                    <span class="itinerary_item_title"><b>Your itinerary is here!</b></span>
-                    <span class="itinerary_item_type"></span>
-                </div>
-                <div class="itinerary_item_body">
-                    <span class="itinerary_item_notes">You can add places and events to your itinerary from their respective page</span>
-                </div>
-                <div class="itinerary_item_footer">
-                    <span class="itinerary_item_location"></span>
-                    <span class="itinerary_item_date"></span>
-                </div>
-          </div>
-        </div>
-        <div id="add_custom_itinerary_event">
+      </div>
+      <div id="add_custom_itinerary_event">
           <span>+</span>
-        </div>
       </div>
     </main>
     <footer></footer>
+    <script type="module" src="/scripts/itinerary.tsx"></script>
   </body>
 </html>
