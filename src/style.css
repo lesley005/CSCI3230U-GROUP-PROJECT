@@ -15,8 +15,7 @@ body {
 #destinations {
     align-items: center;
     display: flex;
-    flex-wrap: wrap;ls src\components
-ls src\data
+    flex-wrap: wrap;
     justify-content: center;
 }
 .destination {
