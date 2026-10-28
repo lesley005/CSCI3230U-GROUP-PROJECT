@@ -3,6 +3,7 @@ import { useState } from "react";
 import ActivityList from "./ActivityList";
 import RestaurantList from "./RestaurantList";
 import "./DestinationDetails.css";
+import SaveButton from "./SaveButton";
 
 function DestinationDetails({ destination }) {
   const [showMore, setShowMore] = useState(false);
@@ -11,6 +12,7 @@ function DestinationDetails({ destination }) {
     <main className="destination-details">
       <section>
         <h1>About {destination.name}</h1>
+        <SaveButton />
 
         <p>{destination.description}</p>
 
