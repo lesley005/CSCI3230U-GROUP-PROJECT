@@ -24,6 +24,43 @@ export function add_itinerary_item(item: ItineraryItem){
     localStorage.setItem("itinerary", JSON.stringify([...events, item]))
 }
 
+function format_date_as_ical(date:Date){
+    let date_string = `${date.getFullYear().toString().padStart(4, "0")}${date.getMonth().toString().padStart(2, "0")}${date.getDay().toString().padStart(2, "0")}`
+    let time_string = `${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}${date.getSeconds().toString().padStart(2, "0")}`
+    return `${date_string}T${time_string}Z`
+}
+
+function ical_event(item: ItineraryItem){
+        let content = 
+`BEGIN:VEVENT
+UID:${item.id}
+DTSTAMP:${format_date_as_ical(item.start)}
+DTSTART:${format_date_as_ical(item.start)}
+DTEND:${format_date_as_ical(item.end)}
+SUMMARY:${item.summary}
+LOCATION:${item.location}
+DESCRIPTION:${item.description}
+END:VEVENT`
+        return content
+}
+function generate_ical(items: ItineraryItem[]){
+        let content = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Journeys Uncharted//Itinerary
+${items.map((item) => ical_event(item)).join("\n")}
+END:VCALENDAR`
+        return content
+    }
+function export_as_ical(items: ItineraryItem[]){
+    let text = generate_ical(items)
+    const dummy = document.createElement("a")
+    dummy.href = window.URL.createObjectURL(new Blob([text], {type: "text/plain"}))
+    dummy.setAttribute("download", "Journeys Uncharted Itinerary.ics")
+    document.body.appendChild(dummy)
+    dummy.click()
+    window.URL.revokeObjectURL(dummy.href)
+    document.body.removeChild(dummy)
+}
 export function ItineraryPage(): React.JSX.Element {
     const [itinerary, set_itinerary] = useState(read_itinerary)
     const [add_event_form_visible, set_event_form_visible] = useState(false)
@@ -63,6 +100,9 @@ export function ItineraryPage(): React.JSX.Element {
                 }} id="add_custom_itinerary_event">
                 <span>+</span>
             </div>
+            <input type="button" onClick={() =>{
+                console.log(export_as_ical(itinerary))
+            }} value="Download"/>
         </section>
     )
 }
@@ -91,11 +131,11 @@ function ItineraryAddEventForm({onSubmit, onClose, visible} : ItineraryAddEventF
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_date">Start</label>
-                <input type="datetime-local" id="create_event_date" name="start" required/>
+                <input type="datetime-local" defaultValue={new Date().toISOString().substring(0,16)} id="create_event_date" name="start" required/>
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_date">End</label>
-                <input type="datetime-local" id="create_event_date" name="end"/>
+                <input type="datetime-local" defaultValue={new Date().toISOString().substring(0,16)} id="create_event_date" name="end"/>
             </div>
             <div className="create_event_form_section">
                 <input id="create_event_close_button" value="Cancel" type="button" onClick={onClose}/>
