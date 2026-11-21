@@ -1,4 +1,3 @@
-import { createRoot } from "react-dom/client";
 import { ItineraryItem, RawItineraryItem } from "../types/itinerary_item";
 import { useState } from "react";
 
@@ -16,7 +15,7 @@ export function read_itinerary(): ItineraryItem[] {
         end: new Date(item.end),
         background_url: item.background_url,
         description: item.description ? item.description : " ",
-        id: crypto.randomUUID()
+        id: item.id
     }))
 }
 export function add_itinerary_item(item: ItineraryItem){
@@ -196,11 +195,3 @@ export function ItineraryEventList({itinerary}: ItineraryListProps): React.JSX.E
         </section>
     )
 }
-
-let root = createRoot(document.getElementById("itinerary_body")!);
-function render_itinerary(){
-    root.render(
-        <ItineraryPage></ItineraryPage>
-    )
-}
-render_itinerary()
