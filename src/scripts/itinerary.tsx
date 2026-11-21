@@ -23,13 +23,13 @@ export function add_itinerary_item(item: ItineraryItem){
     localStorage.setItem("itinerary", JSON.stringify([...events, item]))
 }
 
-function format_date_as_ical(date:Date){
+export function format_date_as_ical(date:Date){
     let date_string = `${date.getFullYear().toString().padStart(4, "0")}${date.getMonth().toString().padStart(2, "0")}${date.getDay().toString().padStart(2, "0")}`
     let time_string = `${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}${date.getSeconds().toString().padStart(2, "0")}`
     return `${date_string}T${time_string}Z`
 }
 
-function ical_event(item: ItineraryItem){
+export function ical_event(item: ItineraryItem){
         let content = 
 `BEGIN:VEVENT
 UID:${item.id}
@@ -42,7 +42,7 @@ DESCRIPTION:${item.description}
 END:VEVENT`
         return content
 }
-function generate_ical(items: ItineraryItem[]){
+export function generate_ical(items: ItineraryItem[]){
         let content = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Journeys Uncharted//Itinerary
@@ -50,7 +50,7 @@ ${items.map((item) => ical_event(item)).join("\n")}
 END:VCALENDAR`
         return content
     }
-function export_as_ical(items: ItineraryItem[]){
+export function export_as_ical(items: ItineraryItem[]){
     let text = generate_ical(items)
     const dummy = document.createElement("a")
     dummy.href = window.URL.createObjectURL(new Blob([text], {type: "text/plain"}))
