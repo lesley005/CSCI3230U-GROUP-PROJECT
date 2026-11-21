@@ -30,24 +30,23 @@ export function format_date_as_ical(date: Date) {
 }
 
 export function ical_event(item: ItineraryItem) {
-    let content =
-        `BEGIN:VEVENT
-UID:${item.id}
-DTSTAMP:${format_date_as_ical(item.start)}
-DTSTART:${format_date_as_ical(item.start)}
-DTEND:${format_date_as_ical(item.end)}
-SUMMARY:${item.summary}
-LOCATION:${item.location}
-DESCRIPTION:${item.description}
-END:VEVENT`
+    let content = [`BEGIN:VEVENT`,
+        `UID:${item.id}`,
+        `DTSTAMP:${format_date_as_ical(item.start)}`,
+        `DTSTART:${format_date_as_ical(item.start)}`,
+        `DTEND:${format_date_as_ical(item.end)}`,
+        `SUMMARY:${item.summary}`,
+        `LOCATION:${item.location}`,
+        `DESCRIPTION:${item.description}`,
+        `END:VEVENT`].join("\n")
     return content
 }
 export function generate_ical(items: ItineraryItem[]) {
-    let content = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Journeys Uncharted//Itinerary
-${items.map((item) => ical_event(item)).join("\n")}
-END:VCALENDAR`
+    let content = [`BEGIN:VCALENDAR`,
+        `VERSION:2.0`,
+        `PRODID:-//Journeys Uncharted//Itinerary`,
+        `${items.map((item) => ical_event(item)).join("\n")}`,
+        `END:VCALENDAR`].join("\n")
     return content
 }
 export function export_as_ical(items: ItineraryItem[]) {
