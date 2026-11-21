@@ -3,22 +3,22 @@ import { add_itinerary_item, read_itinerary, format_date_as_ical, ical_event, ge
 import { ItineraryItem } from "../src/types/itinerary_item"
 describe("LocalStorage", () => {
     const fake_localstorage = (() => {
-        let data: Record<string,string> = {}
-        function setItem(key:string, value:string){
+        let data: Record<string, string> = {}
+        function setItem(key: string, value: string) {
             data[key] = value
         }
-        function getItem(key:string){
+        function getItem(key: string) {
             return data[key]
         }
-        function clear(){
+        function clear() {
             data = {}
         }
-        return {setItem, getItem, clear}
+        return { setItem, getItem, clear }
     })()
 
     vi.stubGlobal("localStorage", fake_localstorage)
 
-    beforeEach(()=>{localStorage.clear()})
+    beforeEach(() => { localStorage.clear() })
     test("Empty itinerary returns []", () => {
         let read = read_itinerary()
         expect(read).toEqual([])
@@ -33,7 +33,7 @@ describe("LocalStorage", () => {
         localStorage.setItem("itinerary", test_data)
         expect(localStorage.getItem("itinerary")).toEqual(test_data)
     })
-    test("Can add item", ()=>{
+    test("Can add item", () => {
         let test_event: ItineraryItem = {
             background_url: "",
             description: "A very long description goes here",
@@ -46,7 +46,7 @@ describe("LocalStorage", () => {
         }
         add_itinerary_item(test_event)
     })
-    test("Can retrieve item", ()=>{
+    test("Can retrieve item", () => {
         let test_event: ItineraryItem = {
             background_url: "",
             description: "A very long description goes here",

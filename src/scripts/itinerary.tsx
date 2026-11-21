@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export function read_itinerary(): ItineraryItem[] {
     let itinerary_raw_array = localStorage.getItem("itinerary")
-    if(!itinerary_raw_array)
+    if (!itinerary_raw_array)
         return []
 
     let raw_item: RawItineraryItem[] = JSON.parse(itinerary_raw_array);
@@ -18,20 +18,20 @@ export function read_itinerary(): ItineraryItem[] {
         id: item.id
     }))
 }
-export function add_itinerary_item(item: ItineraryItem){
+export function add_itinerary_item(item: ItineraryItem) {
     let events: ItineraryItem[] = read_itinerary()
     localStorage.setItem("itinerary", JSON.stringify([...events, item]))
 }
 
-export function format_date_as_ical(date:Date){
+export function format_date_as_ical(date: Date) {
     let date_string = `${date.getFullYear().toString().padStart(4, "0")}${date.getMonth().toString().padStart(2, "0")}${date.getDay().toString().padStart(2, "0")}`
     let time_string = `${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}${date.getSeconds().toString().padStart(2, "0")}`
     return `${date_string}T${time_string}Z`
 }
 
-export function ical_event(item: ItineraryItem){
-        let content = 
-`BEGIN:VEVENT
+export function ical_event(item: ItineraryItem) {
+    let content =
+        `BEGIN:VEVENT
 UID:${item.id}
 DTSTAMP:${format_date_as_ical(item.start)}
 DTSTART:${format_date_as_ical(item.start)}
@@ -40,20 +40,20 @@ SUMMARY:${item.summary}
 LOCATION:${item.location}
 DESCRIPTION:${item.description}
 END:VEVENT`
-        return content
+    return content
 }
-export function generate_ical(items: ItineraryItem[]){
-        let content = `BEGIN:VCALENDAR
+export function generate_ical(items: ItineraryItem[]) {
+    let content = `BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Journeys Uncharted//Itinerary
 ${items.map((item) => ical_event(item)).join("\n")}
 END:VCALENDAR`
-        return content
-    }
-export function export_as_ical(items: ItineraryItem[]){
+    return content
+}
+export function export_as_ical(items: ItineraryItem[]) {
     let text = generate_ical(items)
     const dummy = document.createElement("a")
-    dummy.href = window.URL.createObjectURL(new Blob([text], {type: "text/plain"}))
+    dummy.href = window.URL.createObjectURL(new Blob([text], { type: "text/plain" }))
     dummy.setAttribute("download", "Journeys Uncharted Itinerary.ics")
     document.body.appendChild(dummy)
     dummy.click()
@@ -63,12 +63,12 @@ export function export_as_ical(items: ItineraryItem[]){
 export function ItineraryPage(): React.JSX.Element {
     const [itinerary, set_itinerary] = useState(read_itinerary)
     const [add_event_form_visible, set_event_form_visible] = useState(false)
-    function add_itinerary_item(item: ItineraryItem){
+    function add_itinerary_item(item: ItineraryItem) {
         let updated = [...itinerary, item]
         set_itinerary(updated)
         localStorage.setItem("itinerary", JSON.stringify(updated))
     }
-    function on_add_item_submit(event: React.SubmitEvent<HTMLFormElement>){
+    function on_add_item_submit(event: React.SubmitEvent<HTMLFormElement>) {
         console.log("test")
         event.preventDefault()
         let data = new FormData(event.target);
@@ -91,54 +91,53 @@ export function ItineraryPage(): React.JSX.Element {
                 set_event_form_visible(false)
             }} visible={add_event_form_visible}></ItineraryAddEventForm>
             <ItineraryEventList itinerary={itinerary}></ItineraryEventList>
-            <div onClick={() => 
-                {
-                    if(!add_event_form_visible) {
-                        set_event_form_visible(true)
-                    }
-                }} id="add_custom_itinerary_event">
+            <div onClick={() => {
+                if (!add_event_form_visible) {
+                    set_event_form_visible(true)
+                }
+            }} id="add_custom_itinerary_event">
                 <span>+</span>
             </div>
-            <input type="button" onClick={() =>{
+            <input type="button" onClick={() => {
                 console.log(export_as_ical(itinerary))
-            }} value="Download"/>
+            }} value="Download" />
         </section>
     )
 }
-interface ItineraryAddEventFormProps{
+interface ItineraryAddEventFormProps {
     onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void,
     onClose: () => void,
     visible: boolean
 }
-function ItineraryAddEventForm({onSubmit, onClose, visible} : ItineraryAddEventFormProps){
+function ItineraryAddEventForm({ onSubmit, onClose, visible }: ItineraryAddEventFormProps) {
     return visible ? (
         <form id="create_itinerary_event_form" className="shown" onSubmit={onSubmit}>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_name">Name</label>
-                <input type="text" id="create_event_name" name="name" required/>
+                <input type="text" id="create_event_name" name="name" required />
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_type">Type</label>
-                <input type="text" id="create_event_type" name="type" required/></div>
+                <input type="text" id="create_event_type" name="type" required /></div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_description">Description</label>
-                <input type="text" id="create_event_description" name="description" required/>
+                <input type="text" id="create_event_description" name="description" required />
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_location">Location</label>
-                <input type="text" id="create_event_location" name="location"/>
+                <input type="text" id="create_event_location" name="location" />
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_date">Start</label>
-                <input type="datetime-local" defaultValue={new Date().toISOString().substring(0,16)} id="create_event_date" name="start" required/>
+                <input type="datetime-local" defaultValue={new Date().toISOString().substring(0, 16)} id="create_event_date" name="start" required />
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_date">End</label>
-                <input type="datetime-local" defaultValue={new Date().toISOString().substring(0,16)} id="create_event_date" name="end"/>
+                <input type="datetime-local" defaultValue={new Date().toISOString().substring(0, 16)} id="create_event_date" name="end" />
             </div>
             <div className="create_event_form_section">
-                <input id="create_event_close_button" value="Cancel" type="button" onClick={onClose}/>
-                <input type="submit" id="create_event_submit" value="Add"/>
+                <input id="create_event_close_button" value="Cancel" type="button" onClick={onClose} />
+                <input type="submit" id="create_event_submit" value="Add" />
             </div>
         </form>
     ) : (<></>);
@@ -146,7 +145,7 @@ function ItineraryAddEventForm({onSubmit, onClose, visible} : ItineraryAddEventF
 interface ItineraryListProps {
     itinerary: ItineraryItem[]
 }
-export function ItineraryEventList({itinerary}: ItineraryListProps): React.JSX.Element {
+export function ItineraryEventList({ itinerary }: ItineraryListProps): React.JSX.Element {
     const [selected_filter, set_selected_filter] = useState("All types")
     const type_filters = ["All types", ...new Set(itinerary.map((item) => item.type))]
     return itinerary.length > 0 ? (
@@ -166,10 +165,10 @@ export function ItineraryEventList({itinerary}: ItineraryListProps): React.JSX.E
                             <span className="itinerary_item_title"><b>{item.summary}</b></span>
                             <span className="itinerary_item_type">{item.type}</span>
                         </div><div className="itinerary_item_body">
-                                <span className="itinerary_item_notes">{item.description}</span>
-                            </div><div className="itinerary_item_footer">
-                                <span className="itinerary_item_location">{item.location}</span>
-                                <span className="itinerary_item_date">{item.start.getDate() === item.end.getDate() ? `${item.start.toLocaleDateString()} ${item.start.toLocaleTimeString()} - ${item.end.toLocaleTimeString()}` : `${item.start.toLocaleString()} - ${item.end.toLocaleString()}`}</span>
+                            <span className="itinerary_item_notes">{item.description}</span>
+                        </div><div className="itinerary_item_footer">
+                            <span className="itinerary_item_location">{item.location}</span>
+                            <span className="itinerary_item_date">{item.start.getDate() === item.end.getDate() ? `${item.start.toLocaleDateString()} ${item.start.toLocaleTimeString()} - ${item.end.toLocaleTimeString()}` : `${item.start.toLocaleString()} - ${item.end.toLocaleString()}`}</span>
                         </div>
                     </div>
                 ))}
