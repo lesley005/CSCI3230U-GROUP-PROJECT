@@ -1,20 +1,65 @@
 import { SafetyMapData, SafetyCountry } from '../types/api';
 
 const SAFETY_DATA_URL = 'https://isitsafetotravel.org/map-data.json';
+const SAFETY_STORAGE_KEY = 'ju_safety_map_data';
+const SAFETY_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
 let cachedSafetyData: SafetyMapData | null = null;
 
 // Native engine utility for converting ISO2 codes ('ca') to English names ('Canada')
 const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+
+function loadSafetyFromStorage(): SafetyMapData | null {
+  if (typeof window === 'undefined' || !window.localStorage) return null;
+
+  try {
+    const raw = window.localStorage.getItem(SAFETY_STORAGE_KEY);
+    if (!raw) return null;
+
+    const parsed: { timestamp: number; data: SafetyMapData } = JSON.parse(raw);
+    if (Date.now() - parsed.timestamp > SAFETY_TTL_MS) {
+      window.localStorage.removeItem(SAFETY_STORAGE_KEY);
+      return null;
+    }
+
+    return parsed.data;
+  } catch {
+    return null;
+  }
+}
+
+function saveSafetyToStorage(data: SafetyMapData): void {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+
+  try {
+    window.localStorage.setItem(
+      SAFETY_STORAGE_KEY,
+      JSON.stringify({ timestamp: Date.now(), data })
+    );
+  } catch (err) {
+    console.warn('Unable to save safety map data to localStorage:', err);
+  }
+}
 
 export async function fetchCountrySafety(
   countryName: string,
   countryCodeIso2?: string
 ): Promise<SafetyCountry | null> {
   try {
+    // 1. Check in-memory cache first
+    if (!cachedSafetyData) {
+      // 2. Check browser localStorage second
+      cachedSafetyData = loadSafetyFromStorage();
+    }
+
+    // 3. Fetch from live API if neither cache has it
     if (!cachedSafetyData) {
       const response = await fetch(SAFETY_DATA_URL);
       if (!response.ok) throw new Error(`Safety API returned ${response.status}`);
       cachedSafetyData = await response.json();
+      if (cachedSafetyData) {
+        saveSafetyToStorage(cachedSafetyData);
+      }
     }
 
     const searchKey = countryName.toLowerCase().trim();
