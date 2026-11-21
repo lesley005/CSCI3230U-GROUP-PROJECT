@@ -1,24 +1,24 @@
 import { beforeEach, describe, expect, test, vi } from "vitest"
 import { add_itinerary_item, read_itinerary, format_date_as_ical, ical_event, generate_ical } from "../src/scripts/itinerary"
 import { ItineraryItem } from "../src/types/itinerary_item"
+const fake_localstorage = (() => {
+    let data: Record<string, string> = {}
+    function setItem(key: string, value: string) {
+        data[key] = value
+    }
+    function getItem(key: string) {
+        return data[key]
+    }
+    function clear() {
+        data = {}
+    }
+    return { setItem, getItem, clear }
+})()
+
+vi.stubGlobal("localStorage", fake_localstorage)
+
+beforeEach(() => { localStorage.clear() })
 describe("LocalStorage", () => {
-    const fake_localstorage = (() => {
-        let data: Record<string, string> = {}
-        function setItem(key: string, value: string) {
-            data[key] = value
-        }
-        function getItem(key: string) {
-            return data[key]
-        }
-        function clear() {
-            data = {}
-        }
-        return { setItem, getItem, clear }
-    })()
-
-    vi.stubGlobal("localStorage", fake_localstorage)
-
-    beforeEach(() => { localStorage.clear() })
     test("Empty itinerary returns []", () => {
         let read = read_itinerary()
         expect(read).toEqual([])
@@ -115,15 +115,6 @@ describe("iCal", () => {
         let expected = ["BEGIN:VCALENDAR",
             "VERSION:2.0",
             "PRODID:-//Journeys Uncharted//Itinerary",
-            "BEGIN:VEVENT",
-            "UID:7d85308f-6248-4348-8f46-f345f9a3aad2",
-            "DTSTAMP:20260405T123042Z",
-            "DTSTART:20260405T123042Z",
-            "DTEND:20260405T020000Z",
-            "SUMMARY:A new event that is added",
-            "LOCATION:This is a location",
-            "DESCRIPTION:A very long description goes here",
-            "END:VEVENT",
             "BEGIN:VEVENT",
             "UID:7d85308f-6248-4348-8f46-f345f9a3aad2",
             "DTSTAMP:20260405T123042Z",
