@@ -1,53 +1,71 @@
-import { SafetyMapData, SafetyCountry } from '../types/api';
 
-const SAFETY_DATA_URL = 'https://isitsafetotravel.org/map-data.json';
+import type { SafetyMapData, SafetyCountry } from "../types/api";
+
+const SAFETY_DATA_URL = "https://isitsafetotravel.org/map-data.json";
 let cachedSafetyData: SafetyMapData | null = null;
 
-// Native engine utility for converting ISO2 codes ('ca') to English names ('Canada')
-const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+const regionNames = new Intl.DisplayNames(["en"], { type: "region" });
 
 export async function fetchCountrySafety(
   countryName: string,
-  countryCodeIso2?: string
+  countryCodeIso2?: string,
+  signal?: AbortSignal
 ): Promise<SafetyCountry | null> {
+  signal?.throwIfAborted();
+
   try {
     if (!cachedSafetyData) {
-      const response = await fetch(SAFETY_DATA_URL);
-      if (!response.ok) throw new Error(`Safety API returned ${response.status}`);
-      cachedSafetyData = await response.json();
+      const response = await fetch(SAFETY_DATA_URL, { signal });
+
+      if (!response.ok) {
+        throw new Error(`Safety API returned ${response.status}`);
+      }
+
+      const data: SafetyMapData = await response.json();
+
+      signal?.throwIfAborted();
+      cachedSafetyData = data;
     }
 
     const searchKey = countryName.toLowerCase().trim();
     const iso2Key = countryCodeIso2?.toLowerCase().trim();
 
-    // Convert ISO2 ('ca') to standardized English ('Canada')
-    let convertedEnglishName = '';
+    let convertedEnglishName = "";
+
     if (iso2Key) {
       try {
-        convertedEnglishName = regionNames.of(iso2Key.toUpperCase())?.toLowerCase() || '';
+        convertedEnglishName =
+          regionNames.of(iso2Key.toUpperCase())?.toLowerCase() || "";
       } catch {
-        // Fall back gracefully if an invalid code is passed
+        convertedEnglishName = "";
       }
     }
 
-    const country = cachedSafetyData?.countries.find((c) => {
-      const countryEn = c.name.en.toLowerCase();
+    const country = cachedSafetyData?.countries.find((item) => {
+      const countryEn = item.name.en.toLowerCase();
 
-      // 1. Match converted ISO2 English name (e.g., 'ca' -> 'canada' === 'canada')
-      if (convertedEnglishName && countryEn === convertedEnglishName) return true;
+      if (convertedEnglishName && countryEn === convertedEnglishName) {
+        return true;
+      }
 
-      // 2. Match raw English name from Nominatim
-      if (countryEn === searchKey) return true;
+      if (countryEn === searchKey) {
+        return true;
+      }
 
-      // 3. Match direct 3-letter ISO code
-      if (c.iso3.toLowerCase() === searchKey) return true;
+      if (item.iso3.toLowerCase() === searchKey) {
+        return true;
+      }
 
       return false;
     });
 
     return country || null;
   } catch (error) {
-    console.error('Error fetching safety data:', error);
+    if (signal?.aborted) {
+      throw error;
+    }
+
+    console.error("Error fetching safety data:", error);
     return null;
   }
 }
