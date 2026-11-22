@@ -6,7 +6,7 @@ export interface RawItineraryItem {
     end: string;
     background_url: string;
     description: string;
-    id: number;
+    id: string;
 }
 export interface ItineraryItem {
     summary: string;
@@ -16,5 +16,5 @@ export interface ItineraryItem {
     end: Date;
     background_url: string;
     description: string;
-    id: number;
+    id: string;
 }
