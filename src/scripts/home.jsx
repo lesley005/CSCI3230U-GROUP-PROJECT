@@ -1,4 +1,4 @@
-
+import Wishlist from "../components/Wishlist.jsx";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "../components/HomePage.jsx";
@@ -13,6 +13,7 @@ createRoot(document.getElementById("home-root")).render(
         path="/destinations/:id"
         element={<DestinationDetailsRoute />}
       />
+      <Route path="/saved" element={<Wishlist />} />
     </Routes>
   </BrowserRouter>
 );
