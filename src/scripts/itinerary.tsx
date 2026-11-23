@@ -92,7 +92,9 @@ export function ItineraryPage(): React.JSX.Element {
     }
     function on_delete_event(item: ItineraryItem | string){
         let uuid = typeof(item) == "string" ? item : item.id
-        set_itinerary(itinerary.filter((event) => event.id !== uuid))
+        let updated = itinerary.filter((event) => event.id !== uuid)
+        set_itinerary(updated)
+        localStorage.setItem("itinerary", JSON.stringify(updated))
     }
     return (
         <section>
@@ -180,9 +182,9 @@ export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps):
                             <span className="itinerary_item_location">{item.location}</span>
                             <span className="itinerary_item_date">{item.start.getDate() === item.end.getDate() ? `${item.start.toLocaleDateString()} ${item.start.toLocaleTimeString()} - ${item.end.toLocaleTimeString()}` : `${item.start.toLocaleString()} - ${item.end.toLocaleString()}`}</span>
                         </div>
-                        <div className="itinerary_delete_icon">
-                            Delete
-                        </div>
+                        <span className="itinerary_delete_icon" onClick={() => {onDelete(item.id)}}>
+                            &times;
+                        </span>
                     </div>
                 ))}
             </div>

@@ -89,9 +89,11 @@ table thead th tr {
 }
 .itinerary_item_header {
     display: flex;
+    position: relative;
     justify-content: space-between;
     align-items: flex-start;
     padding-bottom: 10px;
+    padding-right: 15px;
 }
 .itinerary_item_body {
     display: flex;
@@ -110,6 +112,7 @@ table thead th tr {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    position: relative;
 }
 .itinerary_item_title {
     text-align: left;
@@ -120,7 +123,23 @@ table thead th tr {
 .itinerary_item_type {
     text-align: right;
 }
-
+.itinerary_delete_icon {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: black;
+    opacity: 0.0;
+    pointer-events: none;
+    transition: opacity 0.2s, color 0.2s;
+}
+.itinerary_item:hover .itinerary_delete_icon {
+    opacity: 1.0;
+    pointer-events: auto;
+}
+.itinerary_delete_icon:hover {
+    color: red;
+    cursor: pointer;
+}
 #add_custom_itinerary_event {
     position: fixed;
     bottom: 50px;
