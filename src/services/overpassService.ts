@@ -1,53 +1,66 @@
-import { OverpassResponse, DestinationPointOfInterest } from '../types/api';
 
-// Pool of public Overpass endpoints for automatic fallback
+import type {
+  OverpassResponse,
+  DestinationPointOfInterest
+} from "../types/api";
+
 const OVERPASS_ENDPOINTS = [
-  'https://overpass-api.de/api/interpreter',
-  'https://overpass.kumi.systems/api/interpreter',
-  'https://turbo.overpass.private.coffee/api/interpreter'
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+  "https://turbo.overpass.private.coffee/api/interpreter"
 ];
 
 export async function fetchPointsOfInterest(
   lat: number,
   lon: number,
-  radiusMeters: number = 10000
+  radiusMeters: number = 10000,
+  signal?: AbortSignal
 ): Promise<DestinationPointOfInterest[]> {
   const overpassQL = `[out:json][timeout:25];(node["tourism"="attraction"](around:${radiusMeters},${lat},${lon});node["amenity"="restaurant"](around:${radiusMeters},${lat},${lon}););out body 20;`;
 
-  // Try each endpoint sequentially if one returns 502/503/504 or fails
   for (const endpoint of OVERPASS_ENDPOINTS) {
+    signal?.throwIfAborted();
+
     try {
       const response = await fetch(endpoint, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          'User-Agent': 'JourneysUncharted/1.0 (student-project@university.edu)'
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "JourneysUncharted/1.0 (student-project@university.edu)"
         },
-        body: `data=${encodeURIComponent(overpassQL)}`
+        body: `data=${encodeURIComponent(overpassQL)}`,
+        signal
       });
 
       if (!response.ok) {
-        console.warn(`Overpass instance (${endpoint}) responded with ${response.status}. Trying next fallback...`);
-        continue; // Try next URL in loop
+        console.warn(`Overpass returned ${response.status}. Trying another endpoint.`);
+        continue;
       }
 
       const data: OverpassResponse = await response.json();
 
+      signal?.throwIfAborted();
+
       return data.elements
-        .filter(el => el.tags?.name || el.tags?.['name:en'])
-        .map(el => ({
-          id: el.id,
-          name: el.tags?.['name:en'] || el.tags?.name || 'Unnamed Place',
-          category: el.tags?.tourism === 'attraction' ? 'attraction' : 'restaurant',
-          lat: el.lat,
-          lon: el.lon
+        .filter((place) => place.tags?.name || place.tags?.["name:en"])
+        .map((place) => ({
+          id: place.id,
+          name: place.tags?.["name:en"] || place.tags?.name || "Unnamed Place",
+          category: place.tags?.tourism === "attraction" ? "attraction" : "restaurant",
+          lat: place.lat,
+          lon: place.lon
         }));
     } catch (error) {
-      console.warn(`Failed to connect to Overpass endpoint (${endpoint}):`, error);
+      if (signal?.aborted) {
+        throw error;
+      }
+
+      console.warn(`Overpass endpoint failed (${endpoint}):`, error);
     }
   }
 
-  // Graceful fallback if all public endpoints fail or time out
-  console.error('All Overpass API endpoints failed. Returning empty POI list as fallback.');
+  signal?.throwIfAborted();
+
+  console.error("All Overpass endpoints failed.");
   return [];
 }
