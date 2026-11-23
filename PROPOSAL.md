@@ -12,8 +12,7 @@ Presentation: https://www.youtube.com/watch?v=CdOtM_onyKo
 4. [Feature plan](#4-feature-plan)
 5. [Wireframes](#5-wireframes)
 6. [What's next](#6-whats-next)
-7. [Milestone 2 – React Foundation](#7-milestone-2-react-foundation)
-
+7. [Milestone 2 – React Foundation](#7-milestone-2--react-foundation)
 
 ## 1. Topic
 
@@ -167,7 +166,7 @@ Open the printed URL (e.g. http://localhost:5173).
 | **Rameen Khan** | Home page in React (`HomePage`, `HomeDestinationCard`) with search, country filter and A–Z / Z–A sort | Controlled inputs, `useState`, filtering/sorting, Save and Quick Info toggles, empty state |
 | **Daniel Allen** | Itinerary page in React with type filter | `useState`, `.map` with keys, filter by type, empty state, reads itinerary from localStorage |
 | **Zainab Sohail** | Wishlist page in React (`Wishlist`, `DestinationCard`), reusable `SaveButton` on the Details page; added Quebec City, Edmonton and Banff to `destinations.js` | Components with props, `useState` (saved ids), Remove event handling, `.map` with `key={d.id}`, empty state with browse link |
-| **Daniel Bryon** | 
+| **Daniel Bryon** | Created a unified backend service layer `getCityDetails` which acts as single access point for future integration | N/A |
 
 ### Core experience (mock data)
 - **Browse the collection:** home page cards rendered from `src/data/destinations.js`

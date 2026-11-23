@@ -34,9 +34,7 @@ function DestinationDetails({ destination }) {
         {/* I use destination.name so the heading
             changes depending on the selected city. */}
         <h1>About {destination.name}</h1>
-
-        {/* This reusable Save button was added during team review. */}
-        <SaveButton />
+        <SaveButton destination={destination} />
 
         {/* The description comes from the destinations data file. */}
         <p>{destination.description}</p>

@@ -1,29 +1,19 @@
-import { useState } from "react";
 import DestinationCard from "./DestinationCard";
-import { destinations } from "../data/destinations.js";
+import { useSavedDestinations } from "../hooks/useSavedDestinations.js";
 import "./Wishlist.css";
 
-// Mock data for M2: start with these saved. (Later: custom hook + localStorage.)
-const INITIAL_SAVED_IDS = ["toronto", "quebec-city", "edmonton", "banff"];
-
 function Wishlist() {
-  const [savedIds, setSavedIds] = useState(INITIAL_SAVED_IDS);
-
-  function handleRemove(id) {
-    setSavedIds((prev) => prev.filter((savedId) => savedId !== id));
-  }
-
-  // Ids with no matching destination are skipped instead of crashing
-  const savedDestinations = destinations.filter((d) => savedIds.includes(d.id));
+  // Saved destinations come from localStorage, so they survive refreshes
+  const { saved, removeSaved } = useSavedDestinations();
 
   return (
     <main id="wishlist_body">
       <h1>My Wishlist</h1>
 
-      {savedDestinations.length > 0 ? (
+      {saved.length > 0 ? (
         <div className="wishlist">
-          {savedDestinations.map((d) => (
-            <DestinationCard key={d.id} destination={d} onRemove={handleRemove} />
+          {saved.map((d) => (
+            <DestinationCard key={d.id} destination={d} onRemove={removeSaved} />
           ))}
         </div>
       ) : (

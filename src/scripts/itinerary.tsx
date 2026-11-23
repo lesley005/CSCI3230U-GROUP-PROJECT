@@ -51,12 +51,13 @@ export function Itinerary(): React.JSX.Element {
                     </div>
                 ))}
             </div>
+            
         </section>
     ) : (
         <section>
             <div id="itinerary_events">
-            <div className="itinerary_item">
-                <div className="itinerary_item_header">
+                <div className="itinerary_item">
+                    <div className="itinerary_item_header">
                         <span className="itinerary_item_title"><b>Your itinerary is here!</b></span>
                         <span className="itinerary_item_type"></span>
                     </div>
@@ -67,11 +68,55 @@ export function Itinerary(): React.JSX.Element {
                         <span className="itinerary_item_location"></span>
                         <span className="itinerary_item_date"></span>
                     </div>
-            </div>
+                </div>
             </div>
         </section>
     )
 }
-createRoot(document.getElementById("itinerary_body")!).render(
-    <Itinerary></Itinerary>
-)
+
+export function add_itinerary_item(item: ItineraryItem){
+    let events: ItineraryItem[] = read_itinerary()
+    item.id = events.length
+    localStorage.setItem("itinerary", JSON.stringify([...events, item]))
+
+}
+
+
+let form = document.querySelector("#create_itinerary_event_form")! as HTMLFormElement
+let form_close_button = document.getElementById("create_event_close_button")!;
+let form_create_button = document.getElementById("add_custom_itinerary_event")!;
+form?.addEventListener("submit", (event) => {
+    let data = new FormData(form);
+    let events: ItineraryItem[] = read_itinerary()
+    let new_event: ItineraryItem = {
+        summary: data.get("name") as string,
+        type: data.get("type") as string,
+        description: data.get("description") as string,
+        location: data.get("location") as string,
+        start: new Date(data.get("start") as string),
+        end: new Date(data.get("end") as string),
+        background_url: "",
+        id: -1
+    };
+    add_itinerary_item(new_event)
+    form.reset()
+});
+
+form_close_button.addEventListener("click", (event) => {
+    form.reset()
+    form.classList.remove("shown");
+})
+form_create_button.addEventListener("click", (event) => {
+    if(form.classList.contains("shown")){
+        form.classList.remove("shown");
+    } else {
+        form.classList.add("shown");
+    }
+})
+let root = createRoot(document.getElementById("itinerary_body")!);
+function render_itinerary(){
+    root.render(
+        <Itinerary></Itinerary>
+    )
+}
+render_itinerary()

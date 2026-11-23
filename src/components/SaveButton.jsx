@@ -1,8 +1,10 @@
-import { useState } from "react";
+
+import { useSavedDestinations } from "../hooks/useSavedDestinations.js";   // use the shared hook
 
 // Reusable Save/Unsave toggle. onToggle is optional: it gets the new saved value.
-function SaveButton({ initialSaved = false, onToggle }) {
-  const [saved, setSaved] = useState(initialSaved);
+function SaveButton({ destination }) {                      
+  const { isSaved, toggleSaved } = useSavedDestinations();
+  const saved = isSaved(destination.id); 
 
   function handleClick() {
     const next = !saved;
@@ -15,7 +17,8 @@ function SaveButton({ initialSaved = false, onToggle }) {
       type="button"
       className="save-button"
       aria-pressed={saved}
-      onClick={handleClick}
+      onClick={() => toggleSaved(destination)}
+      aria-label={saved ? `Remove ${destination.name} from saved` : `Save ${destination.name}`}
     >
       {saved ? "♥ Saved" : "♡ Save"}
     </button>
