@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from "vitest"
-import { add_itinerary_item, read_itinerary, format_date_as_ical, ical_event, generate_ical } from "../src/scripts/itinerary"
+import { add_itinerary_item, read_itinerary, format_date_as_ical, ical_event, generate_ical, delete_itinerary_item } from "../src/scripts/itinerary"
 import { ItineraryItem } from "../src/types/itinerary_item"
 const fake_localstorage = (() => {
     let data: Record<string, string> = {}
@@ -60,6 +60,49 @@ describe("LocalStorage", () => {
         add_itinerary_item(test_event)
         let read = read_itinerary()
         expect(read).toEqual([test_event])
+    })
+    test("Can delete event from UUID", () => {
+        let test_data = '[{"background_url":"","description":"A very long description goes here","location":"This is a location","summary":"A new event that is added","type":"Test Event","id":"5753ff90-5aac-427a-9212-5f0c8ba0feff","start":"2026-05-08T16:30:42.000Z","end":"2026-05-08T06:00:00.000Z"}]'
+        localStorage.setItem("itinerary", test_data)
+        expect(localStorage.getItem("itinerary")).not.toEqual("[]")
+        delete_itinerary_item("5753ff90-5aac-427a-9212-5f0c8ba0feff")
+        expect(localStorage.getItem("itinerary")).toEqual("[]")
+    })
+    test("Can delete event from ItineraryItem", () => {
+        let test_event: ItineraryItem = {
+            background_url: "",
+            description: "A very long description goes here",
+            location: "This is a location",
+            summary: "A new event that is added",
+            type: "Test Event",
+            id: "7d85308f-6248-4348-8f46-f345f9a3aad2",
+            start: new Date(2026, 4, 8, 12, 30, 42),
+            end: new Date(2026, 4, 8, 2, 0, 0)
+        }
+        add_itinerary_item(test_event)
+        let read = read_itinerary()
+        expect(read).not.toEqual([])
+        delete_itinerary_item(test_event)
+        read = read_itinerary()
+        expect(read).toEqual([])
+    })
+    test("Deleting event with incorrect ID does not delete any event", () => {
+        let test_event: ItineraryItem = {
+            background_url: "",
+            description: "A very long description goes here",
+            location: "This is a location",
+            summary: "A new event that is added",
+            type: "Test Event",
+            id: "7d85308f-6248-4348-8f46-f345f9a3aad2",
+            start: new Date(2026, 4, 8, 12, 30, 42),
+            end: new Date(2026, 4, 8, 2, 0, 0)
+        }
+        add_itinerary_item(test_event)
+        let read = read_itinerary()
+        expect(read).not.toEqual([])
+        delete_itinerary_item("1753ff90-5aac-427a-9212-5f0c8ba0feff")
+        read = read_itinerary()
+        expect(read).not.toEqual([])
     })
 })
 describe("iCal", () => {

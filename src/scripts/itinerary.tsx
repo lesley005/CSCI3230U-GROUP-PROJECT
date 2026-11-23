@@ -23,6 +23,12 @@ export function add_itinerary_item(item: ItineraryItem) {
     localStorage.setItem("itinerary", JSON.stringify([...events, item]))
 }
 
+export function delete_itinerary_item(item: ItineraryItem | string){
+    let uuid = typeof(item) == "string" ? item : item.id
+    let events: ItineraryItem[] = read_itinerary()
+    localStorage.setItem("itinerary", JSON.stringify([...events.filter((event) => {return event.id !== uuid})]))
+}
+
 export function format_date_as_ical(date: Date) {
     let date_string = `${date.getFullYear().toString().padStart(4, "0")}${date.getMonth().toString().padStart(2, "0")}${date.getDay().toString().padStart(2, "0")}`
     let time_string = `${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}${date.getSeconds().toString().padStart(2, "0")}`
@@ -84,12 +90,16 @@ export function ItineraryPage(): React.JSX.Element {
         add_itinerary_item(new_event)
         event.target.reset()
     }
+    function on_delete_event(item: ItineraryItem | string){
+        let uuid = typeof(item) == "string" ? item : item.id
+        set_itinerary(itinerary.filter((event) => event.id !== uuid))
+    }
     return (
         <section>
             <ItineraryAddEventForm onSubmit={on_add_item_submit} onClose={() => {
                 set_event_form_visible(false)
             }} visible={add_event_form_visible}></ItineraryAddEventForm>
-            <ItineraryEventList itinerary={itinerary}></ItineraryEventList>
+            <ItineraryEventList itinerary={itinerary} onDelete={on_delete_event}></ItineraryEventList>
             <div onClick={() => {
                 if (!add_event_form_visible) {
                     set_event_form_visible(true)
@@ -142,9 +152,10 @@ function ItineraryAddEventForm({ onSubmit, onClose, visible }: ItineraryAddEvent
     ) : (<></>);
 }
 interface ItineraryListProps {
-    itinerary: ItineraryItem[]
+    itinerary: ItineraryItem[],
+    onDelete: (item: ItineraryItem|string) => void
 }
-export function ItineraryEventList({ itinerary }: ItineraryListProps): React.JSX.Element {
+export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps): React.JSX.Element {
     const [selected_filter, set_selected_filter] = useState("All types")
     const type_filters = ["All types", ...new Set(itinerary.map((item) => item.type))]
     return itinerary.length > 0 ? (
@@ -168,6 +179,9 @@ export function ItineraryEventList({ itinerary }: ItineraryListProps): React.JSX
                         </div><div className="itinerary_item_footer">
                             <span className="itinerary_item_location">{item.location}</span>
                             <span className="itinerary_item_date">{item.start.getDate() === item.end.getDate() ? `${item.start.toLocaleDateString()} ${item.start.toLocaleTimeString()} - ${item.end.toLocaleTimeString()}` : `${item.start.toLocaleString()} - ${item.end.toLocaleString()}`}</span>
+                        </div>
+                        <div className="itinerary_delete_icon">
+                            Delete
                         </div>
                     </div>
                 ))}
