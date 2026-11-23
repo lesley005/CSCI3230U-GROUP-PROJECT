@@ -2,8 +2,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
-import DestinationDetailsRoute from "./DestinationDetailsRoute.jsx";
-import { getCityDetails } from "../services/destinationService.ts";
+import DestinationDetailsRoute from "../src/components/DestinationDetailsRoute.jsx";
+import { getCityDetails } from "../src/services/destinationService.ts";
 
 vi.mock("../services/destinationService.ts", () => ({
   getCityDetails: vi.fn()

@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { render, screen, fireEvent, cleanup } from "@testing-library/react";
-import Wishlist from "./Wishlist.jsx";
-import SaveButton from "./SaveButton.jsx";
-import { STORAGE_KEY } from "../utils/savedStorage.js";
+import Wishlist from "../src/components/Wishlist.jsx";
+import SaveButton from "../src/components/SaveButton.jsx";
+import { STORAGE_KEY } from "../src/utils/savedStorage.js";
 
 const toronto = { id: "toronto", name: "Toronto", country: "Canada", image: "toronto.jpg" };
 const banff = { id: "banff", name: "Banff", country: "Canada", image: "banff.jpg" };
