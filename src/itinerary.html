@@ -1,64 +1,35 @@
 <!DOCTYPE html>
 <html lang="">
-  <head>
-    <meta charset="utf-8">
-    <title>Journey's Uncharted</title>
-    <link rel="stylesheet" href="/style.css">
-    <script type="module" src="scripts/itinerary.tsx"></script>
-  </head>
-  <body>
-    <header>
-      <nav id="navbar">
-        <a href="index.html" class="site-brand">
-          <img class="logo" src="/resources/images/icon.png?v=2" alt="Journey's Uncharted Logo">
-          <span>Journey's Uncharted</span>
-        </a>
 
-        <div class="header_links">
-          <a href="/destinations.html" class="link inactive">Destinations</a>
-          <a href="/itinerary.html" class="link active">Itinerary</a>
-          <a href="/wishlist.html" class="link inactive">Wishlist</a>
-        </div>
-      </nav>
-    </header>
-    <main>
-      <div id="itinerary_body" class="itinerary_body">
-        </div>
+<head>
+  <meta charset="utf-8">
+  <title>Journey's Uncharted</title>
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="scripts/itinerary_page.tsx"></script>
+</head>
+
+<body>
+  <header>
+    <nav id="navbar">
+      <a href="index.html" class="site-brand">
+        <img class="logo" src="/resources/images/icon.png?v=2" alt="Journey's Uncharted Logo">
+        <span>Journey's Uncharted</span>
+      </a>
+
+      <div class="header_links">
+        <a href="/destinations.html" class="link inactive">Destinations</a>
+        <a href="/itinerary.html" class="link active">Itinerary</a>
+        <a href="/wishlist.html" class="link inactive">Wishlist</a>
       </div>
-      <div id="add_custom_itinerary_event">
-          <span>+</span>
-      </div>
-      <form id="create_itinerary_event_form">
-        <div class="create_event_form_section">
-          <label for="create_event_name">Name</label>
-          <input type="text" id="create_event_name" name="name" required>
-        </div>
-        <div class="create_event_form_section">
-          <label for="create_event_type">Type</label>
-          <input type="text" id="create_event_type" name="type" required/></div>
-        <div class="create_event_form_section">
-            <label for="create_event_description">Description</label>
-            <input type="text" id="create_event_description" name="description" required>
-        </div>
-        <div class="create_event_form_section">
-          <label for="create_event_location">Location</label>
-          <input type="text" id="create_event_location" name="location"/>
-        </div>
-        <div class="create_event_form_section">
-          <label for="create_event_date">Start</label>
-          <input type="datetime-local" id="create_event_date" name="start" required/>
-        </div>
-        <div class="create_event_form_section">
-          <label for="create_event_date">End</label>
-          <input type="datetime-local" id="create_event_date" name="end"/>
-        </div>
-        <div class="create_event_form_section">
-          <input id="create_event_close_button" value="Cancel" type="button"/>
-          <input type="submit" id="create_event_submit" value="Add">
-        </div>
-      </form>
-    </main>
-    <footer></footer>
-    <script type="module" src="/scripts/itinerary.tsx"></script>
-  </body>
+    </nav>
+  </header>
+  <main>
+    <div id="itinerary_body" class="itinerary_body">
+    </div>
+    </div>
+  </main>
+  <footer></footer>
+  <script type="module" src="/scripts/itinerary.tsx"></script>
+</body>
+
 </html>
