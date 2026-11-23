@@ -1,3 +1,6 @@
+
+import { Link } from "react-router-dom";
+
 function HomeDestinationCard({
   destination,
   isSaved,
@@ -50,11 +53,14 @@ function HomeDestinationCard({
           {isSaved ? "♥ Saved" : "♡ Save"}
         </button>
 
-        {destination.page ? (
-          <a className="home-details-button" href={destination.page}>
-            View Details
-          </a>
-        ) : (
+        <Link
+          className="home-details-button"
+          to={`/destinations/${destination.id}`}
+        >
+          View Details
+        </Link>
+
+        {!destination.page && (
           <button
             className="home-details-button"
             type="button"
