@@ -22,7 +22,7 @@ function DestinationDetails({ destination }) {
     <main className="destination-details">
       <section>
         <h1>About {destination.name}</h1>
-        <SaveButton />
+        <SaveButton destination={destination} />
 
         <p>{destination.description}</p>
 
