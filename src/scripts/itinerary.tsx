@@ -1,5 +1,6 @@
+import { createRoot } from "react-dom/client";
 import { ItineraryItem, RawItineraryItem } from "../types/itinerary_item";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function read_itinerary(): ItineraryItem[] {
     let itinerary_raw_array = localStorage.getItem("itinerary")
@@ -67,7 +68,6 @@ export function export_as_ical(items: ItineraryItem[]) {
 }
 export function ItineraryPage(): React.JSX.Element {
     const [itinerary, set_itinerary] = useState(read_itinerary)
-    const [add_event_form_visible, set_event_form_visible] = useState(false)
     function add_itinerary_item(item: ItineraryItem) {
         let updated = [...itinerary, item]
         set_itinerary(updated)
@@ -92,18 +92,21 @@ export function ItineraryPage(): React.JSX.Element {
     }
     function on_delete_event(item: ItineraryItem | string){
         let uuid = typeof(item) == "string" ? item : item.id
-        set_itinerary(itinerary.filter((event) => event.id !== uuid))
+        let updated = itinerary.filter((event) => event.id !== uuid)
+        set_itinerary(updated)
+        localStorage.setItem("itinerary", JSON.stringify(updated))
     }
+    let update = () => {
+        console.log("Updating itinerary")
+        set_itinerary(read_itinerary())
+        window.removeEventListener("itinerary_updated", update)
+    }
+    window.addEventListener("itinerary_updated", update)
     return (
         <section>
-            <ItineraryAddEventForm onSubmit={on_add_item_submit} onClose={() => {
-                set_event_form_visible(false)
-            }} visible={add_event_form_visible}></ItineraryAddEventForm>
             <ItineraryEventList itinerary={itinerary} onDelete={on_delete_event}></ItineraryEventList>
             <div onClick={() => {
-                if (!add_event_form_visible) {
-                    set_event_form_visible(true)
-                }
+                show_add_event_form()
             }} id="add_custom_itinerary_event">
                 <span>+</span>
             </div>
@@ -116,41 +119,91 @@ export function ItineraryPage(): React.JSX.Element {
 interface ItineraryAddEventFormProps {
     onSubmit: (event: React.SubmitEvent<HTMLFormElement>) => void,
     onClose: () => void,
-    visible: boolean
+    defaultValues?: Partial<ItineraryItem>
 }
-function ItineraryAddEventForm({ onSubmit, onClose, visible }: ItineraryAddEventFormProps) {
-    return visible ? (
+
+function ItineraryAddEventForm({ onSubmit, onClose, defaultValues}: ItineraryAddEventFormProps) {
+    return (
         <form id="create_itinerary_event_form" className="shown" onSubmit={onSubmit}>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_name">Name</label>
-                <input type="text" id="create_event_name" name="name" required />
+                <input type="text" id="create_event_name" name="name" required defaultValue={defaultValues?.summary ?? ""}/>
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_type">Type</label>
-                <input type="text" id="create_event_type" name="type" required /></div>
+                <input type="text" id="create_event_type" name="type" required defaultValue={defaultValues?.type ?? ""}/></div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_description">Description</label>
-                <input type="text" id="create_event_description" name="description" required />
+                <input type="text" id="create_event_description" name="description" required defaultValue={defaultValues?.description ?? ""}/>
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_location">Location</label>
-                <input type="text" id="create_event_location" name="location" />
+                <input type="text" id="create_event_location" name="location" defaultValue={defaultValues?.location ?? ""}/>
             </div>
             <div className="create_event_form_section">
-                <label htmlFor="create_event_date">Start</label>
-                <input type="datetime-local" defaultValue={new Date().toISOString().substring(0, 16)} id="create_event_date" name="start" required />
+                <label htmlFor="create_event_date_start">Start</label>
+                <input type="datetime-local" defaultValue={defaultValues?.start?.toISOString().substring(0, 16) ?? new Date().toISOString().substring(0, 16)} id="create_event_date_start" name="start" required />
             </div>
             <div className="create_event_form_section">
-                <label htmlFor="create_event_date">End</label>
-                <input type="datetime-local" defaultValue={new Date().toISOString().substring(0, 16)} id="create_event_date" name="end" />
+                <label htmlFor="create_event_date_end">End</label>
+                <input type="datetime-local" defaultValue={defaultValues?.start?.toISOString().substring(0, 16) ?? new Date().toISOString().substring(0, 16)} id="create_event_date_end" name="end" />
             </div>
             <div className="create_event_form_section">
                 <input id="create_event_close_button" value="Cancel" type="button" onClick={onClose} />
                 <input type="submit" id="create_event_submit" value="Add" />
             </div>
         </form>
-    ) : (<></>);
+    );
 }
+// AI-generated code (Hydrogen Thinking 4 Education): See AI-USAGE.md entry #3
+export function show_add_event_form(
+    defaults?: Partial<ItineraryItem>,
+): void {
+    if(document.getElementById("event_creation_dialog") != undefined){
+        return
+    }
+    const container = document.createElement("div");
+    container.id = "event_creation_dialog"
+    document.body.appendChild(container);
+    const root = createRoot(container);
+
+    const cleanup = () => {
+        root.unmount();
+        container.remove();
+    };
+
+    const handle_submit = (event: React.SubmitEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const start_date = new Date(data.get("start") as string);
+        const end_raw = data.get("end") as string;
+
+        const new_event: ItineraryItem = {
+            summary: data.get("name") as string,
+            type: data.get("type") as string,
+            description: data.get("description") as string,
+            location: data.get("location") as string,
+            start: start_date,
+            end: end_raw ? new Date(end_raw) : start_date,
+            background_url: defaults?.background_url ?? "",
+            id: crypto.randomUUID()
+        };
+
+        add_itinerary_item(new_event);
+        window.dispatchEvent(new Event("itinerary_updated"));
+        cleanup();
+    };
+
+    root.render(
+        <ItineraryAddEventForm
+            defaultValues={defaults}
+            onSubmit={handle_submit}
+            onClose={cleanup}
+        />
+    );
+}
+// End AI-code
+
 interface ItineraryListProps {
     itinerary: ItineraryItem[],
     onDelete: (item: ItineraryItem|string) => void
@@ -180,9 +233,9 @@ export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps):
                             <span className="itinerary_item_location">{item.location}</span>
                             <span className="itinerary_item_date">{item.start.getDate() === item.end.getDate() ? `${item.start.toLocaleDateString()} ${item.start.toLocaleTimeString()} - ${item.end.toLocaleTimeString()}` : `${item.start.toLocaleString()} - ${item.end.toLocaleString()}`}</span>
                         </div>
-                        <div className="itinerary_delete_icon">
-                            Delete
-                        </div>
+                        <span className="itinerary_delete_icon" onClick={() => {onDelete(item.id)}}>
+                            &times;
+                        </span>
                     </div>
                 ))}
             </div>
