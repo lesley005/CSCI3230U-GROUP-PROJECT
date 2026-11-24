@@ -106,10 +106,7 @@ export function ItineraryPage(): React.JSX.Element {
         <section>
             <ItineraryEventList itinerary={itinerary} onDelete={on_delete_event}></ItineraryEventList>
             <div onClick={() => {
-                show_add_event_form({
-                    summary: "Test Event!",
-                    type: "Test"
-                })
+                show_add_event_form()
             }} id="add_custom_itinerary_event">
                 <span>+</span>
             </div>

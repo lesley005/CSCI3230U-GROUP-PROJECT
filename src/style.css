@@ -53,7 +53,62 @@ table thead th tr {
     margin: 40px auto;
 }
 
+@keyframes fade_in{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
 
+#create_itinerary_event_form {
+    width: fit-content;
+    display: grid;
+    gap: 10px;
+    background-color: white;
+    box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+    padding: 20px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+}
+
+.create_event_form_section {
+    width: 100%;
+    gap: 5px;
+    display: grid;
+}
+
+.create_event_form_section:last-child {
+    width: 100%;
+    gap: 5px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#create_itinerary_event_form label {
+    text-align: right;
+    align-items: center;
+}
+
+#create_itinerary_event_form input {
+    text-align: left;
+    align-items: center;
+}
+
+#event_creation_dialog {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: rgba(0,0,0,0.50);
+    backdrop-filter: blur(5px);
+    animation: fade_in 0.2s ease-in;
+}
 /* Lesley - prototype styling */
 
 /* page */
