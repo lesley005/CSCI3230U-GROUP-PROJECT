@@ -1,14 +1,17 @@
-// src/services/nominatimService.ts
 
-import { NominatimPlace } from '../types/api';
+import type { NominatimPlace } from "../types/api";
 
-const NOMINATIM_BASE_URL = 'https://nominatim.openstreetmap.org/search';
+const NOMINATIM_BASE_URL = "https://nominatim.openstreetmap.org/search";
 const cache = new Map<string, NominatimPlace[]>();
 
-// Must have 'export' right before 'function'
-export async function searchCityNominatim(cityName: string): Promise<NominatimPlace[]> {
+export async function searchCityNominatim(
+  cityName: string,
+  signal?: AbortSignal
+): Promise<NominatimPlace[]> {
+  signal?.throwIfAborted();
+
   const query = cityName.trim().toLowerCase();
-  
+
   if (cache.has(query)) {
     return cache.get(query)!;
   }
@@ -18,9 +21,10 @@ export async function searchCityNominatim(cityName: string): Promise<NominatimPl
   try {
     const response = await fetch(url, {
       headers: {
-        'User-Agent': 'JourneysUncharted/1.0 (student-project@university.edu)',
-        'Accept-Language': 'en' // Forces English country and city names
-      }
+        "User-Agent": "JourneysUncharted/1.0 (student-project@university.edu)",
+        "Accept-Language": "en"
+      },
+      signal
     });
 
     if (!response.ok) {
@@ -28,10 +32,16 @@ export async function searchCityNominatim(cityName: string): Promise<NominatimPl
     }
 
     const data: NominatimPlace[] = await response.json();
+
+    signal?.throwIfAborted();
     cache.set(query, data);
+
     return data;
   } catch (error) {
-    console.error('Error fetching from Nominatim:', error);
+    if (!signal?.aborted) {
+      console.error("Error fetching from Nominatim:", error);
+    }
+
     throw error;
   }
 }

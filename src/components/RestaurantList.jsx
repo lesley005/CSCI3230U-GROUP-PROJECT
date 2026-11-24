@@ -4,13 +4,13 @@ function RestaurantList({ restaurants }) {
     <section className="destination-restaurants">
       <h2>Great places to eat</h2>
 
-      {restaurants !== undefined && restaurants.length > 0 ? (
+      {restaurants && restaurants.length > 0 ? (
         <table>
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Cuisine</th>
-              <th>Rating</th>
+              <th scope="col">Name</th>
+              <th scope="col">Cuisine</th>
+              <th scope="col">Rating</th>
             </tr>
           </thead>
 
@@ -18,8 +18,12 @@ function RestaurantList({ restaurants }) {
             {restaurants.map((restaurant) => (
               <tr key={restaurant.id}>
                 <td>{restaurant.name}</td>
-                <td>{restaurant.cuisine}</td>
-                <td>{restaurant.rating}/5</td>
+                <td>{restaurant.cuisine || "Not listed"}</td>
+                <td>
+                  {typeof restaurant.rating === "number"
+                    ? `${restaurant.rating}/5`
+                    : "Not listed"}
+                </td>
               </tr>
             ))}
           </tbody>

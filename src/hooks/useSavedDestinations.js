@@ -1,4 +1,4 @@
-// AI-assisted (Claude) - see AI-USAGE.md
+// AI-assisted - see AI-USAGE.md #1
 import { useEffect, useState } from "react";
 import {
   loadSaved,

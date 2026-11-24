@@ -53,128 +53,61 @@ table thead th tr {
     margin: 40px auto;
 }
 
-#itinerary_type_filter_container {
-    flex: 1;
-    min-width: 0;
-    margin: 25px;
-}
-#itinerary_type_filter_container label {
-    display: block;
-    margin-bottom: 7px;
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-#itinerary_type_filter_container select {
-    width: 50%;
-    min-height: 50px;
-    padding: 12px 14px;
-    border: 1px solid var(--teal);
-    border-radius: 8px;
-    background-color: var(--cream);
-    color: var(--navy);
-    font: inherit;
-}
-
-.itinerary_body {
-    width: 90%;
-    max-width: 1200px;
-    margin: 40px auto;
-}
-#itinerary_events {
-    align-items: center;
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    justify-content: center;
-    gap: 25px;
-}
-.itinerary_item_header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding-bottom: 10px;
-}
-.itinerary_item_body {
-    display: flex;
-}
-.itinerary_item_footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding-top: 10px;
-}
-.itinerary_item {
-    width: auto;
-    height: auto;
-    padding: 10px;
-    background-color: white;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-.itinerary_item_title {
-    text-align: left;
-}
-.itinerary_item_notes {
-    text-align: left;
-}
-.itinerary_item_type {
-    text-align: right;
-}
-
-#add_custom_itinerary_event {
-    position: fixed;
-    bottom: 50px;
-    right: 50px;
-    width: 50px;
-    height: 50px;
-    background-color: var(--teal);
-    color: var(--cream);
-    border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-}
-#add_custom_itinerary_event:hover{
-    transform: translate(0px,5px);
+@keyframes fade_in{
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 #create_itinerary_event_form {
     width: fit-content;
-    display: none;
+    display: grid;
     gap: 10px;
     background-color: white;
     box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
     padding: 20px;
     position: fixed;
-    top:40%;
-    bottom: 40%;
-    height: fit-content;
-    left: 40%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
 }
-#create_itinerary_event_form.shown{
-    display: grid;
-}
+
 .create_event_form_section {
     width: 100%;
     gap: 5px;
     display: grid;
-
 }
+
 .create_event_form_section:last-child {
     width: 100%;
     gap: 5px;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
-#create_itinerary_event_form label{
+
+#create_itinerary_event_form label {
     text-align: right;
     align-items: center;
 }
-#create_itinerary_event_form input{
+
+#create_itinerary_event_form input {
     text-align: left;
     align-items: center;
+}
+
+#event_creation_dialog {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    background: rgba(0,0,0,0.50);
+    backdrop-filter: blur(5px);
+    animation: fade_in 0.2s ease-in;
 }
 /* Lesley - prototype styling */
 
