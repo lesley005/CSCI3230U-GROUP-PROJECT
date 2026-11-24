@@ -24,7 +24,9 @@ function HomeDestinationCard({
               loading="lazy"
             />
           ) : (
-            <div className="home-photo-fallback">Photo unavailable</div>
+            <div className="home-photo-fallback">
+              Photo unavailable
+            </div>
           )}
         </div>
       )}
@@ -44,22 +46,34 @@ function HomeDestinationCard({
 
       <div className="home-card-content">
         <h3>
-          {destination.name}{destination.country && `, ${destination.country}`}
+          {destination.name}
+          {destination.country && `, ${destination.country}`}
         </h3>
 
         {isExpanded && (
-          <div className="home-card-details" id={detailsId}>
+          <div
+            className="home-card-details"
+            id={detailsId}
+          >
             <p>{destination.description}</p>
+
             {destination.factSource && (
               <small>
-                From <a href={destination.factSource}>Wikipedia</a>
+                From{" "}
+                <a href={destination.factSource}>
+                  Wikipedia
+                </a>
                 {" · "}
-                <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>
+                <a href="https://creativecommons.org/licenses/by-sa/4.0/">
+                  CC BY-SA 4.0
+                </a>
               </small>
             )}
 
             {destination.activities?.length > 0 && (
-              <p>{destination.activities.length} activities to explore</p>
+              <p>
+                {destination.activities.length} activities to explore
+              </p>
             )}
 
             {destination.restaurants?.length > 0 && (
@@ -80,25 +94,23 @@ function HomeDestinationCard({
         >
           {isSaved ? "♥ Saved" : "♡ Save"}
         </button>
-          {/* cities without a detail page show quick info on the card */}
-          {destination.page ? (
-            <Link
-              className="home-details-button"
-              to={`/destinations/${encodeURIComponent(destination.id)}`}
-            >
-              View Details
-            </Link>
-          ) : (
-            <button
-              className="home-details-button"
-              type="button"
-              aria-expanded={isExpanded}
-              aria-controls={detailsId}
-              onClick={onToggleDetails}
-            >
-              {isExpanded ? "Hide Quick Info" : "Quick Info"}
-            </button>
-          )}
+
+        <button
+          className="home-details-button"
+          type="button"
+          aria-expanded={isExpanded}
+          aria-controls={detailsId}
+          onClick={onToggleDetails}
+        >
+          {isExpanded ? "Hide Quick Info" : "Quick Info"}
+        </button>
+
+        <Link
+          className="home-details-button"
+          to={`/destinations/${encodeURIComponent(destination.id)}`}
+        >
+          View Details
+        </Link>
       </div>
     </article>
   );
