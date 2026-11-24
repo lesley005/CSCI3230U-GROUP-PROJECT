@@ -34,38 +34,6 @@ export async function getGeoNamesDestination(id, signal) {
 
   if (!city) return null;
 
-  const lat = city.coordinates?.lat;
-  const lon = city.coordinates?.lon;
-
-  if (lat == null || lon == null) {
-    throw new Error("City coordinates are missing");
-  }
-
-  const places = await fetchPointsOfInterest(
-    Number(lat),
-    Number(lon),
-    10000,
-    signal
-  );
-
-  signal?.throwIfAborted();
-
-  const activities = places
-    .filter((place) => place.category === "attraction")
-    .map((place) => ({
-      id: place.id,
-      name: place.name
-    }));
-
-  const restaurants = places
-    .filter((place) => place.category === "restaurant")
-    .map((place) => ({
-      id: place.id,
-      name: place.name,
-      cuisine: null,
-      rating: null
-    }));
-
   return {
     id,
     name: city.name,
@@ -73,7 +41,69 @@ export async function getGeoNamesDestination(id, signal) {
     description: city.cou_name_en
       ? `${city.name} is a city in ${city.cou_name_en}.`
       : `Explore ${city.name}.`,
-    activities,
-    restaurants
+    coordinates: city.coordinates,
+    activities: [],
+    restaurants: []
   };
+}
+
+export async function getGeoNamesPlaces(city, signal) {
+  const lat = city.coordinates?.lat;
+  const lon = city.coordinates?.lon;
+
+  if (lat == null || lon == null) {
+    return { activities: [], restaurants: [] };
+  }
+
+  signal?.throwIfAborted();
+
+  const controller = new AbortController();
+
+  const abortRequest = () => controller.abort();
+
+  signal?.addEventListener("abort", abortRequest, {
+    once: true
+  });
+
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, 15000);
+
+  try {
+    const places = await fetchPointsOfInterest(
+      Number(lat),
+      Number(lon),
+      2000,
+      controller.signal
+    );
+
+    signal?.throwIfAborted();
+
+    const activities = places
+      .filter((place) => place.category === "attraction")
+      .map((place) => ({
+        id: place.id,
+        name: place.name
+      }));
+
+    const restaurants = places
+      .filter((place) => place.category === "restaurant")
+      .map((place) => ({
+        id: place.id,
+        name: place.name,
+        cuisine: null,
+        rating: null
+      }));
+
+    return { activities, restaurants };
+  } catch (error) {
+    if (signal?.aborted) throw error;
+
+    console.warn("Nearby places could not be loaded:", error);
+
+    return { activities: [], restaurants: [] };
+  } finally {
+    clearTimeout(timeout);
+    signal?.removeEventListener("abort", abortRequest);
+  }
 }

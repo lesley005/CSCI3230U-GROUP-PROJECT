@@ -3,7 +3,10 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { destinations } from "../data/destinations.js";
 import { getCityDetails } from "../services/destinationService.ts";
-import { getGeoNamesDestination } from "../services/geoNamesDetailService.js";
+import {
+  getGeoNamesDestination,
+  getGeoNamesPlaces
+} from "../services/geoNamesDetailService.js";
 import DestinationDetails from "./DestinationDetails.jsx";
 
 function DestinationDetailsRoute() {
@@ -20,7 +23,8 @@ function DestinationDetailsRoute() {
     loading: true,
     data: null,
     error: "",
-    notFound: false
+    notFound: false,
+    placesLoading: false
   });
 
   useEffect(() => {
@@ -33,7 +37,8 @@ function DestinationDetailsRoute() {
       loading: true,
       data: null,
       error: "",
-      notFound: false
+      notFound: false,
+      placesLoading: false
     });
 
     async function loadDestination() {
@@ -46,13 +51,58 @@ function DestinationDetailsRoute() {
 
           if (controller.signal.aborted) return;
 
+          if (!city) {
+            setApiState({
+              id,
+              loading: false,
+              data: null,
+              error: "",
+              notFound: true,
+              placesLoading: false
+            });
+            return;
+          }
+
           setApiState({
             id,
             loading: false,
             data: city,
             error: "",
-            notFound: !city
+            notFound: false,
+            placesLoading: true
           });
+
+          try {
+            const places = await getGeoNamesPlaces(
+              city,
+              controller.signal
+            );
+
+            if (controller.signal.aborted) return;
+
+            setApiState((current) =>
+              current.id === id
+                ? {
+                    ...current,
+                    data: {
+                      ...city,
+                      ...places
+                    },
+                    placesLoading: false
+                  }
+                : current
+            );
+          } catch (error) {
+            if (controller.signal.aborted) return;
+
+            console.warn("Could not load nearby places:", error);
+
+            setApiState((current) =>
+              current.id === id
+                ? { ...current, placesLoading: false }
+                : current
+            );
+          }
 
           return;
         }
@@ -68,14 +118,16 @@ function DestinationDetailsRoute() {
           throw new Error("Destination not found");
         }
 
-        const activities = details.pointsOfInterest
+        const points = details.pointsOfInterest || [];
+
+        const activities = points
           .filter((place) => place.category === "attraction")
           .map((place) => ({
             id: place.id,
             name: place.name
           }));
 
-        const restaurants = details.pointsOfInterest
+        const restaurants = points
           .filter((place) => place.category === "restaurant")
           .map((place) => ({
             id: place.id,
@@ -93,7 +145,8 @@ function DestinationDetailsRoute() {
             restaurants
           },
           error: "",
-          notFound: false
+          notFound: false,
+          placesLoading: false
         });
       } catch (error) {
         if (controller.signal.aborted) return;
@@ -103,16 +156,15 @@ function DestinationDetailsRoute() {
           loading: false,
           data: destination || null,
           error: "Could not load live destination information.",
-          notFound: false
+          notFound: false,
+          placesLoading: false
         });
       }
     }
 
     loadDestination();
 
-    return () => {
-      controller.abort();
-    };
+    return () => controller.abort();
   }, [id, destination, isGeoNames]);
 
   if (!destination && !isGeoNames) {
@@ -160,6 +212,12 @@ function DestinationDetailsRoute() {
       <DestinationDetails
         destination={apiState.data || destination}
       />
+
+      {apiState.placesLoading && (
+        <div className="destination-details" role="status">
+          <p>Loading nearby attractions and restaurants...</p>
+        </div>
+      )}
     </>
   );
 }
