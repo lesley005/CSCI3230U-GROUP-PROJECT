@@ -9,7 +9,7 @@ import "./HomePage.css";
 function HomePage() {
   const [search, setSearch] = useState("");
   const [country, setCountry] = useState("all");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortOrder, setSortOrder] = useState("population");
   // AI-assisted - see AI-USAGE.md #4
   const {saved, isSaved, toggleSaved } = useSavedDestinations();
   const [expandedIds, setExpandedIds] = useState([]);
@@ -20,7 +20,7 @@ function HomePage() {
   const [request, setRequest] = useState({
     search: "",
     country: "all",
-    sortOrder: "asc",
+    sortOrder: "population",
     offset: 0,
   });
   const [nextOffset, setNextOffset] = useState(null);
@@ -190,6 +190,7 @@ function HomePage() {
               value={sortOrder}
               onChange={handleSortChange}
             >
+              <option value="population">Most populated</option>
               <option value="asc">Name: A–Z</option>
               <option value="desc">Name: Z–A</option>
             </select>

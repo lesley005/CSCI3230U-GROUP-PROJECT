@@ -35,7 +35,9 @@ async function fetchCityPage({
     const params = new URLSearchParams({
         select: "geoname_id,name,cou_name_en,population,coordinates",
         // break ties by country and id so cities with the same name stay in a consistent order
-        order_by: `name ${direction}, cou_name_en ${direction}, geoname_id asc`,
+        order_by: sortOrder === "population"
+          ? "population desc, geoname_id asc"
+          : `name ${direction}, cou_name_en ${direction}, geoname_id asc`,
         offset: String(offset),
     });
 
