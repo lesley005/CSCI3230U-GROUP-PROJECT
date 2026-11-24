@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { destinations } from "../data/destinations.js";
 import { getCityDetails } from "../services/destinationService.ts";
+import { getGeoNamesDestination } from "../services/geoNamesDetailService.js";
 import DestinationDetails from "./DestinationDetails.jsx";
 
 function DestinationDetailsRoute() {
@@ -12,15 +13,18 @@ function DestinationDetailsRoute() {
     (place) => place.id === id
   );
 
+  const isGeoNames = /^geonames-\d+$/.test(id || "");
+
   const [apiState, setApiState] = useState({
     id: null,
     loading: true,
     data: null,
-    error: ""
+    error: "",
+    notFound: false
   });
 
   useEffect(() => {
-    if (!destination) return;
+    if (!destination && !isGeoNames) return;
 
     const controller = new AbortController();
 
@@ -28,11 +32,36 @@ function DestinationDetailsRoute() {
       id,
       loading: true,
       data: null,
-      error: ""
+      error: "",
+      notFound: false
     });
 
-    getCityDetails(destination.name, controller.signal)
-      .then((details) => {
+    async function loadDestination() {
+      try {
+        if (isGeoNames) {
+          const city = await getGeoNamesDestination(
+            id,
+            controller.signal
+          );
+
+          if (controller.signal.aborted) return;
+
+          setApiState({
+            id,
+            loading: false,
+            data: city,
+            error: "",
+            notFound: !city
+          });
+
+          return;
+        }
+
+        const details = await getCityDetails(
+          destination.name,
+          controller.signal
+        );
+
         if (controller.signal.aborted) return;
 
         if (!details) {
@@ -63,26 +92,30 @@ function DestinationDetailsRoute() {
             activities,
             restaurants
           },
-          error: ""
+          error: "",
+          notFound: false
         });
-      })
-      .catch(() => {
+      } catch (error) {
         if (controller.signal.aborted) return;
 
         setApiState({
           id,
           loading: false,
-          data: null,
-          error: "Could not load live destination information."
+          data: destination || null,
+          error: "Could not load live destination information.",
+          notFound: false
         });
-      });
+      }
+    }
+
+    loadDestination();
 
     return () => {
       controller.abort();
     };
-  }, [id, destination]);
+  }, [id, destination, isGeoNames]);
 
-  if (!destination) {
+  if (!destination && !isGeoNames) {
     return <DestinationDetails destination={undefined} />;
   }
 
@@ -90,7 +123,24 @@ function DestinationDetailsRoute() {
     return (
       <main className="destination-details">
         <section role="status">
-          <p>Loading places in {destination.name}...</p>
+          <p>
+            Loading places in {destination?.name || "your destination"}...
+          </p>
+        </section>
+      </main>
+    );
+  }
+
+  if (apiState.notFound) {
+    return <DestinationDetails destination={undefined} />;
+  }
+
+  if (apiState.error && !apiState.data) {
+    return (
+      <main className="destination-details">
+        <section role="alert">
+          <h1>Could not load destination</h1>
+          <p>{apiState.error}</p>
         </section>
       </main>
     );
