@@ -1,4 +1,4 @@
-// AI-assisted (Claude) - see AI-USAGE.md
+// AI-assisted - see AI-USAGE.md #1
 // Plain functions for reading/writing saved destinations in localStorage.
 // Kept separate from React so they can be tested with `npm test` (node --test).
 

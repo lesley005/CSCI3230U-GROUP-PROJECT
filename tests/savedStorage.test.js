@@ -8,7 +8,7 @@ import {
   toggleInList,
   removeFromList,
   toSnapshot,
-} from "./savedStorage.js";
+} from "../src/utils/savedStorage.js";
 
 // A fake localStorage so these tests don't depend on the browser's real one
 function fakeStorage(initial = {}) {
