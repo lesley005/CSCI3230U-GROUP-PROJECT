@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { destinations } from "../data/destinations.js";
 import { getCityDetails } from "../services/destinationService.ts";
 import {
@@ -8,9 +8,11 @@ import {
   getGeoNamesPlaces
 } from "../services/geoNamesDetailService.js";
 import DestinationDetails from "./DestinationDetails.jsx";
+import { addCityArticles } from "../services/cityArticleService.js";
 
 function DestinationDetailsRoute() {
   const { id } = useParams();
+  const location = useLocation();
 
   const destination = destinations.find(
     (place) => place.id === id
@@ -63,14 +65,59 @@ function DestinationDetailsRoute() {
             return;
           }
 
+          const homeCity = location.state?.destination;
+
+          const homePhoto =
+            homeCity?.id === id && homeCity.image && homeCity.imageCredit
+              ? {
+                  image: homeCity.image,
+                  imageCredit: homeCity.imageCredit
+                }
+              : null;
+
+          const displayCity = {
+            ...city,
+            ...(homePhoto || {})
+          };
+
           setApiState({
             id,
             loading: false,
-            data: city,
+            data: displayCity,
             error: "",
             notFound: false,
             placesLoading: true
           });
+
+          // Direct links can retrieve the photo without delaying the city.
+          if (!homePhoto) {
+            addCityArticles([city], controller.signal)
+              .then(([withPhoto]) => {
+                if (
+                  controller.signal.aborted ||
+                  !withPhoto?.image ||
+                  !withPhoto.imageCredit
+                ) return;
+
+                setApiState((current) =>
+                  current.id === id
+                    ? {
+                        ...current,
+                        data: {
+                          ...current.data,
+                          image: withPhoto.image,
+                          imageCredit: withPhoto.imageCredit
+                        }
+                      }
+                    : current
+                );
+              })
+              .catch((error) => {
+                if (!controller.signal.aborted) {
+                  console.warn("City photo unavailable:", error);
+                }
+              });
+          }
 
           try {
             const places = await getGeoNamesPlaces(
@@ -85,7 +132,7 @@ function DestinationDetailsRoute() {
                 ? {
                     ...current,
                     data: {
-                      ...city,
+                      ...current.data,
                       ...places
                     },
                     placesLoading: false
@@ -165,7 +212,7 @@ function DestinationDetailsRoute() {
     loadDestination();
 
     return () => controller.abort();
-  }, [id, destination, isGeoNames]);
+  }, [id, destination, isGeoNames, location.key]);
 
   if (!destination && !isGeoNames) {
     return <DestinationDetails destination={undefined} />;
