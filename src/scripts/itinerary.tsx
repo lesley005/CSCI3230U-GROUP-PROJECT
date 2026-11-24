@@ -6,9 +6,9 @@ export function read_itinerary(): ItineraryItem[] {
     let itinerary_raw_array = localStorage.getItem("itinerary")
     if (!itinerary_raw_array)
         return []
-
-    let raw_item: RawItineraryItem[] = JSON.parse(itinerary_raw_array);
-    return raw_item.map((item) => ({
+    try {
+      let raw_item: RawItineraryItem[] = JSON.parse(itinerary_raw_array);
+      return raw_item.map((item) => ({
         summary: item.summary,
         type: item.type,
         location: item.location,
@@ -17,7 +17,11 @@ export function read_itinerary(): ItineraryItem[] {
         background_url: item.background_url,
         description: item.description ? item.description : " ",
         id: item.id
-    }))
+      }))
+    } catch (err) {
+      console.log(err)
+      return []
+    }
 }
 export function add_itinerary_item(item: ItineraryItem) {
     let events: ItineraryItem[] = read_itinerary()
@@ -31,7 +35,7 @@ export function delete_itinerary_item(item: ItineraryItem | string){
 }
 
 export function format_date_as_ical(date: Date) {
-    let date_string = `${date.getFullYear().toString().padStart(4, "0")}${date.getMonth().toString().padStart(2, "0")}${date.getDay().toString().padStart(2, "0")}`
+    let date_string = `${date.getFullYear().toString().padStart(4, "0")}${(date.getMonth()+1).toString().padStart(2, "0")}${date.getDate().toString().padStart(2, "0")}`
     let time_string = `${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}${date.getSeconds().toString().padStart(2, "0")}`
     return `${date_string}T${time_string}Z`
 }
@@ -45,15 +49,15 @@ export function ical_event(item: ItineraryItem) {
         `SUMMARY:${item.summary}`,
         `LOCATION:${item.location}`,
         `DESCRIPTION:${item.description}`,
-        `END:VEVENT`].join("\n")
+        `END:VEVENT`].join("\r\n")
     return content
 }
 export function generate_ical(items: ItineraryItem[]) {
     let content = [`BEGIN:VCALENDAR`,
         `VERSION:2.0`,
         `PRODID:-//Journeys Uncharted//Itinerary`,
-        `${items.map((item) => ical_event(item)).join("\n")}`,
-        `END:VCALENDAR`].join("\n")
+        `${items.map((item) => ical_event(item)).join("\r\n")}`,
+        `END:VCALENDAR`].join("\r\n")
     return content
 }
 export function export_as_ical(items: ItineraryItem[]) {
@@ -96,12 +100,14 @@ export function ItineraryPage(): React.JSX.Element {
         set_itinerary(updated)
         localStorage.setItem("itinerary", JSON.stringify(updated))
     }
-    let update = () => {
-        console.log("Updating itinerary")
-        set_itinerary(read_itinerary())
-        window.removeEventListener("itinerary_updated", update)
-    }
-    window.addEventListener("itinerary_updated", update)
+    useEffect(() => {
+      let update = () => {
+          console.log("Updating itinerary")
+          set_itinerary(read_itinerary())
+          window.removeEventListener("itinerary_updated", update)
+      }
+      window.addEventListener("itinerary_updated", update)
+    }, [])
     return (
         <section>
             <ItineraryEventList itinerary={itinerary} onDelete={on_delete_event}></ItineraryEventList>
@@ -146,7 +152,7 @@ function ItineraryAddEventForm({ onSubmit, onClose, defaultValues}: ItineraryAdd
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_date_end">End</label>
-                <input type="datetime-local" defaultValue={defaultValues?.start?.toISOString().substring(0, 16) ?? new Date().toISOString().substring(0, 16)} id="create_event_date_end" name="end" />
+                <input type="datetime-local" defaultValue={defaultValues?.end?.toISOString().substring(0, 16) ?? new Date().toISOString().substring(0, 16)} id="create_event_date_end" name="end" />
             </div>
             <div className="create_event_form_section">
                 <input id="create_event_close_button" value="Cancel" type="button" onClick={onClose} />
