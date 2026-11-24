@@ -27,3 +27,21 @@
   outline: 3px solid var(--blue);
   outline-offset: 3px;
 }
+
+.home-photo-fallback {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 200px;
+  background: #d5ebe4;
+  color: #244a47;
+}
+
+	/* keep load more on its own row below the cards */
+.home-page .home-load-more {
+  display: block;
+  width: 100%;
+  margin: 28px 0 0;
+  box-sizing: border-box;
+}
