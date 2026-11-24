@@ -5,7 +5,8 @@ import { useSavedDestinations } from "../hooks/useSavedDestinations.js";   // us
 function SaveButton({ destination }) {                      
   const { isSaved, toggleSaved } = useSavedDestinations();
   const saved = isSaved(destination.id); 
-
+  
+// AI-assisted - see AI-USAGE.md #1
   function handleClick() {
     const next = !saved;
     setSaved(next);

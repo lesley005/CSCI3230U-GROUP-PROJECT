@@ -1,7 +1,7 @@
 import DestinationCard from "./DestinationCard";
 import { useSavedDestinations } from "../hooks/useSavedDestinations.js";
 import "./Wishlist.css";
-
+// AI-assisted - see AI-USAGE.md #1
 function Wishlist() {
   // Saved destinations come from localStorage, so they survive refreshes
   const { saved, removeSaved } = useSavedDestinations();
