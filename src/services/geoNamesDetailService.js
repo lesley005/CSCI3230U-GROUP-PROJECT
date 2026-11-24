@@ -4,6 +4,43 @@ import { fetchPointsOfInterest } from "./overpassService.ts";
 const CITIES_URL =
   "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records";
 
+// Use these Paris recommendations if Overpass is unavailable.
+const PARIS_FALLBACK = {
+  activities: [
+    { id: "paris-eiffel", name: "Eiffel Tower" },
+    { id: "paris-louvre", name: "Louvre Museum" },
+    { id: "paris-notre-dame", name: "Notre-Dame Cathedral" }
+  ],
+  restaurants: [
+    {
+      id: "paris-le-train-bleu",
+      name: "Le Train Bleu",
+      cuisine: null,
+      rating: null
+    },
+    {
+      id: "paris-bouillon-chartier",
+      name: "Bouillon Chartier",
+      cuisine: null,
+      rating: null
+    }
+  ]
+};
+
+function getFallbackPlaces(id) {
+  if (id === "geonames-2988507") {
+    return {
+      activities: [...PARIS_FALLBACK.activities],
+      restaurants: [...PARIS_FALLBACK.restaurants]
+    };
+  }
+
+  return {
+    activities: [],
+    restaurants: []
+  };
+}
+
 export async function getGeoNamesDestination(id, signal) {
   const match = /^geonames-(\d+)$/.exec(id);
 
@@ -26,6 +63,7 @@ export async function getGeoNamesDestination(id, signal) {
   }
 
   const data = await response.json();
+
   signal?.throwIfAborted();
 
   const city = data.results?.find(
@@ -33,6 +71,8 @@ export async function getGeoNamesDestination(id, signal) {
   );
 
   if (!city) return null;
+
+  const fallback = getFallbackPlaces(id);
 
   return {
     id,
@@ -42,8 +82,8 @@ export async function getGeoNamesDestination(id, signal) {
       ? `${city.name} is a city in ${city.cou_name_en}.`
       : `Explore ${city.name}.`,
     coordinates: city.coordinates,
-    activities: [],
-    restaurants: []
+    activities: fallback.activities,
+    restaurants: fallback.restaurants
   };
 }
 
@@ -51,8 +91,10 @@ export async function getGeoNamesPlaces(city, signal) {
   const lat = city.coordinates?.lat;
   const lon = city.coordinates?.lon;
 
+  const fallback = getFallbackPlaces(city.id);
+
   if (lat == null || lon == null) {
-    return { activities: [], restaurants: [] };
+    return fallback;
   }
 
   signal?.throwIfAborted();
@@ -67,7 +109,7 @@ export async function getGeoNamesPlaces(city, signal) {
 
   const timeout = setTimeout(() => {
     controller.abort();
-  }, 15000);
+  }, 65000);
 
   try {
     const places = await fetchPointsOfInterest(
@@ -95,15 +137,33 @@ export async function getGeoNamesPlaces(city, signal) {
         rating: null
       }));
 
-    return { activities, restaurants };
+    return {
+      activities:
+        activities.length > 0
+          ? activities
+          : fallback.activities,
+      restaurants:
+        restaurants.length > 0
+          ? restaurants
+          : fallback.restaurants
+    };
   } catch (error) {
-    if (signal?.aborted) throw error;
+    if (signal?.aborted) {
+      throw error;
+    }
 
-    console.warn("Nearby places could not be loaded:", error);
+    console.warn(
+      "Overpass unavailable. Using fallback places:",
+      error
+    );
 
-    return { activities: [], restaurants: [] };
+    return fallback;
   } finally {
     clearTimeout(timeout);
-    signal?.removeEventListener("abort", abortRequest);
+
+    signal?.removeEventListener(
+      "abort",
+      abortRequest
+    );
   }
 }
