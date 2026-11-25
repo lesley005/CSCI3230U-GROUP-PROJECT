@@ -1,8 +1,42 @@
-
 import { fetchPointsOfInterest } from "./overpassService.ts";
 
 const CITIES_URL =
   "https://public.opendatasoft.com/api/explore/v2.1/catalog/datasets/geonames-all-cities-with-a-population-1000/records";
+
+const GEO_CACHE_PREFIX = "ju_geo_";
+const CACHE_TTL_MS = 24 * 60 * 60 * 1000;
+
+function getCachedGeoDestination(id) {
+  if (typeof window === "undefined" || !window.localStorage) return null;
+
+  try {
+    const raw = window.localStorage.getItem(`${GEO_CACHE_PREFIX}${id}`);
+    if (!raw) return null;
+
+    const entry = JSON.parse(raw);
+    if (Date.now() - entry.timestamp > CACHE_TTL_MS) {
+      window.localStorage.removeItem(`${GEO_CACHE_PREFIX}${id}`);
+      return null;
+    }
+
+    return entry.data;
+  } catch {
+    return null;
+  }
+}
+
+function setCachedGeoDestination(id, data) {
+  if (typeof window === "undefined" || !window.localStorage) return;
+
+  try {
+    window.localStorage.setItem(
+      `${GEO_CACHE_PREFIX}${id}`,
+      JSON.stringify({ timestamp: Date.now(), data })
+    );
+  } catch {
+    // Ignore storage quota errors
+  }
+}
 
 export async function getGeoNamesDestination(id, signal) {
   const match = /^geonames-(\d+)$/.exec(id);
@@ -10,6 +44,9 @@ export async function getGeoNamesDestination(id, signal) {
   if (!match) return null;
 
   signal?.throwIfAborted();
+
+  const cached = getCachedGeoDestination(id);
+  if (cached) return cached;
 
   const params = new URLSearchParams({
     select: "geoname_id,name,cou_name_en,coordinates",
@@ -66,7 +103,7 @@ export async function getGeoNamesDestination(id, signal) {
       rating: null
     }));
 
-  return {
+  const result = {
     id,
     name: city.name,
     country: city.cou_name_en || "",
@@ -76,4 +113,7 @@ export async function getGeoNamesDestination(id, signal) {
     activities,
     restaurants
   };
+
+  setCachedGeoDestination(id, result);
+  return result;
 }
