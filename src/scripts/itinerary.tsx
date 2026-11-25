@@ -1,7 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { ItineraryItem, RawItineraryItem } from "../types/itinerary_item";
 import { useEffect, useState } from "react";
-
+import "/itinerary.css"
+import "/style.css"
 export function read_itinerary(): ItineraryItem[] {
     let itinerary_raw_array = localStorage.getItem("itinerary")
     if (!itinerary_raw_array)
@@ -72,6 +73,9 @@ export function export_as_ical(items: ItineraryItem[]) {
 }
 export function ItineraryPage(): React.JSX.Element {
     const [itinerary, set_itinerary] = useState(read_itinerary)
+    const [current_search, set_search] = useState("")
+    const [current_type_filter, set_selected_filter] = useState("All types")
+    const type_filters = ["All types", ...new Set(itinerary.map((item) => item.type))]
     function add_itinerary_item(item: ItineraryItem) {
         let updated = [...itinerary, item]
         set_itinerary(updated)
@@ -108,18 +112,55 @@ export function ItineraryPage(): React.JSX.Element {
       }
       window.addEventListener("itinerary_updated", update)
     }, [])
-    return (
-        <section>
-            <ItineraryEventList itinerary={itinerary} onDelete={on_delete_event}></ItineraryEventList>
-            <div onClick={() => {
-                show_add_event_form()
-            }} id="add_custom_itinerary_event">
-                <span>+</span>
-            </div>
-            <input type="button" onClick={() => {
-                console.log(export_as_ical(itinerary))
-            }} value="Download" />
+  return (
+      <main className="itinerary-main">
+        <section className="itinerary-intro">
+        <h1 id="itinerary-title">Plan your trip!</h1>
+        <p>
+          Keep track of events and places you've scheduled!
+        </p>
+
+        <div className="itinerary-filters">
+          <div className="itinerary-field">
+            <label htmlFor="searchbar">Search itinerary</label>
+            <input
+              id="searchbar"
+              type="search"
+              placeholder="Search for an event"
+              value={current_search}
+            onChange={(event) => {
+              set_search(event.target.value)
+            }}
+            />
+          </div>
+          <div className="itinerary-field">
+            <label htmlFor="itinerary-country">Type</label>
+            <select
+              id="itinerary-type-filter"
+              value={current_type_filter}
+              onChange={(event) => set_selected_filter(event.target.value)}
+            >
+              {type_filters.map((type) => (
+                  <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+
+        </div>
+        <ItineraryEventList itinerary={itinerary} onDelete={on_delete_event} search_filter={current_search} type_filter={current_type_filter}></ItineraryEventList>
+          <button id="itinerary_download_button" className="itinerary-button" onClick={() => {
+              console.log(export_as_ical(itinerary))
+          }}>
+            Download
+          </button>
+          <div onClick={() => {
+              show_add_event_form()
+          }} id="add_custom_itinerary_event">
+              <span>+</span>
+          </div>
+
         </section>
+      </main>
     )
 }
 interface ItineraryAddEventFormProps {
@@ -212,23 +253,15 @@ export function show_add_event_form(
 
 interface ItineraryListProps {
     itinerary: ItineraryItem[],
-    onDelete: (item: ItineraryItem|string) => void
+    onDelete: (item: ItineraryItem | string) => void
+    type_filter: string,
+    search_filter: string
 }
-export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps): React.JSX.Element {
-    const [selected_filter, set_selected_filter] = useState("All types")
-    const type_filters = ["All types", ...new Set(itinerary.map((item) => item.type))]
+export function ItineraryEventList({ itinerary, onDelete, type_filter, search_filter}: ItineraryListProps): React.JSX.Element {
     return itinerary.length > 0 ? (
         <section>
-            <div id="itinerary_type_filter_container">
-                <label htmlFor="itinerary_type_filter">Type</label>
-                <select id="itinerary_type_filter" onChange={(event) => set_selected_filter(event.target.value)}>
-                    {type_filters.map((type) => (
-                        <option key={type} value={type}>{type}</option>
-                    ))}
-                </select>
-            </div>
             <div id="itinerary_events">
-                {itinerary.filter(item => selected_filter === "All types" || selected_filter === item.type).map((item) => (
+                {itinerary.filter(item => type_filter === "All types" || type_filter === item.type).filter(item => item.summary.toLowerCase().indexOf(search_filter.toLowerCase()) != -1).map((item) => (
                     <div className="itinerary_item" key={item.id}>
                         <div className="itinerary_item_header">
                             <span className="itinerary_item_title"><b>{item.summary}</b></span>
@@ -239,7 +272,7 @@ export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps):
                             <span className="itinerary_item_location">{item.location}</span>
                             <span className="itinerary_item_date">{item.start.getDate() === item.end.getDate() ? `${item.start.toLocaleDateString()} ${item.start.toLocaleTimeString()} - ${item.end.toLocaleTimeString()}` : `${item.start.toLocaleString()} - ${item.end.toLocaleString()}`}</span>
                         </div>
-                        <span className="itinerary_delete_icon" onClick={() => {onDelete(item.id)}}>
+                        <span className="itinerary_delete_icon" title="Delete" onClick={() => {onDelete(item.id)}}>
                             &times;
                         </span>
                     </div>
@@ -266,3 +299,4 @@ export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps):
         </section>
     )
 }
+export default ItineraryPage;

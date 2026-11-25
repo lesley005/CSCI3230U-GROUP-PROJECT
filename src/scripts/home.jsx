@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import HomePage from "../components/HomePage.jsx";
 import DestinationDetailsRoute from "../components/DestinationDetailsRoute.jsx";
+import { ItineraryPage } from "./itinerary.js";
 
 createRoot(document.getElementById("home-root")).render(
   <BrowserRouter>
@@ -14,6 +15,7 @@ createRoot(document.getElementById("home-root")).render(
         element={<DestinationDetailsRoute />}
       />
       <Route path="/saved" element={<Wishlist />} />
+      <Route path="/itinerary.html" element={<ItineraryPage />} />
     </Routes>
   </BrowserRouter>
 );
