@@ -15,7 +15,7 @@ createRoot(document.getElementById("home-root")).render(
         element={<DestinationDetailsRoute />}
       />
       <Route path="/saved" element={<Wishlist />} />
-      <Route path="/itinerary.html" element={<ItineraryPage />} />
+      <Route path="/itinerary" element={<ItineraryPage />} />
     </Routes>
   </BrowserRouter>
 );
