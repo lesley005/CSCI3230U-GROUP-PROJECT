@@ -202,6 +202,21 @@ function ItineraryAddEventForm({ onSubmit, onClose, defaultValues}: ItineraryAdd
         </form>
     );
 }
+/**
+ * Display a full-screen popup form that on submission will add an event to the itinerary
+ * Example usage:
+ * ```javascript
+ * show_add_event_form({
+ *   summary: "Event title",
+ *   type: "Example Event",
+ *   description: "A description of the event",
+ *   location: "The location the event is at",
+ *   start: new Date(2026, 11, 1, 13, 30, 0),
+ *   end: new Date(2026, 11, 1, 14, 30, 0)
+ * })
+ * ```
+ * @param defaults Optional default values to add to the form's input fields
+ */
 // AI-generated code (Hydrogen Thinking 4 Education): See AI-USAGE.md entry #3
 export function show_add_event_form(
     defaults?: Partial<ItineraryItem>,
