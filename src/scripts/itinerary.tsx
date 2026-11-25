@@ -108,7 +108,7 @@ export function ItineraryPage(): React.JSX.Element {
       let update = () => {
           console.log("Updating itinerary")
           set_itinerary(read_itinerary())
-          window.removeEventListener("itinerary_updated", update)
+        //   window.removeEventListener("itinerary_updated", update)
       }
       window.addEventListener("itinerary_updated", update)
     }, [])
