@@ -107,7 +107,7 @@ describe("LocalStorage", () => {
 })
 describe("iCal", () => {
     test("Date formats correctly", () => {
-        expect(format_date_as_ical(new Date(2026, 4, 8, 12, 30, 42))).toEqual("20260405T123042Z")
+        expect(format_date_as_ical(new Date(2026, 4, 8, 12, 30, 42))).toEqual("20260508T123042Z")
     })
     test("Itinerary event formats correctly", () => {
         let test_event: ItineraryItem = {
@@ -121,15 +121,15 @@ describe("iCal", () => {
             end: new Date(2026, 4, 8, 2, 0, 0)
         }
         let ical_event_string = ical_event(test_event)
-        let expected = ["BEGIN:VEVENT", 
-            "UID:7d85308f-6248-4348-8f46-f345f9a3aad2", 
-            "DTSTAMP:20260405T123042Z", 
-            "DTSTART:20260405T123042Z", 
-            "DTEND:20260405T020000Z", 
-            "SUMMARY:A new event that is added", 
-            "LOCATION:This is a location", 
-            "DESCRIPTION:A very long description goes here", 
-            "END:VEVENT"].join("\n")
+        let expected = ["BEGIN:VEVENT",
+            "UID:7d85308f-6248-4348-8f46-f345f9a3aad2",
+            "DTSTAMP:20260508T123042Z",
+            "DTSTART:20260508T123042Z",
+            "DTEND:20260508T020000Z",
+            "SUMMARY:A new event that is added",
+            "LOCATION:This is a location",
+            "DESCRIPTION:A very long description goes here",
+            "END:VEVENT"].join("\r\n")
         expect(ical_event_string).toEqual(expected)
     })
     test("Itinerary list formats correctly", () => {
@@ -160,23 +160,23 @@ describe("iCal", () => {
             "PRODID:-//Journeys Uncharted//Itinerary",
             "BEGIN:VEVENT",
             "UID:7d85308f-6248-4348-8f46-f345f9a3aad2",
-            "DTSTAMP:20260405T123042Z",
-            "DTSTART:20260405T123042Z",
-            "DTEND:20260405T020000Z",
+            "DTSTAMP:20260508T123042Z",
+            "DTSTART:20260508T123042Z",
+            "DTEND:20260508T020000Z",
             "SUMMARY:A new event that is added",
             "LOCATION:This is a location",
             "DESCRIPTION:A very long description goes here",
             "END:VEVENT",
             "BEGIN:VEVENT",
             "UID:f9aeb088-9c87-4b86-beb3-a3350e765c21",
-            "DTSTAMP:20260405T123042Z",
-            "DTSTART:20260405T123042Z",
-            "DTEND:20260405T020000Z",
+            "DTSTAMP:20260508T123042Z",
+            "DTSTART:20260508T123042Z",
+            "DTEND:20260508T020000Z",
             "SUMMARY:Another event that is added",
             "LOCATION:This is another location",
             "DESCRIPTION:Another very long description goes here",
             "END:VEVENT",
-            "END:VCALENDAR"].join("\n")
+            "END:VCALENDAR"].join("\r\n")
         let read = read_itinerary()
         let ical_string = generate_ical(read)
         expect(ical_string).toEqual(expected)
