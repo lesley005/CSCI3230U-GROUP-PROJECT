@@ -10,7 +10,6 @@ export default defineConfig({
       input: {
         main: "index.html",
         destinations: "destinations.html",
-        itinerary: "itinerary.html",
         wishlist: "wishlist.html",
         toronto: "destinations/toronto_ontario.html"
       }

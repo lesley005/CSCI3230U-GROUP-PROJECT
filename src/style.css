@@ -269,18 +269,18 @@ body {
     box-sizing: border-box;
 }
 
-.home-page .home-main {
+.home-page .home-main , .itinerary-main{
     width: 90%;
     max-width: 1160px;
     margin: 56px auto 80px;
 }
 
-.home-page .home-intro {
+.home-page .home-intro,.itinerary-intro{
     padding: 0;
     background: transparent;
 }
 
-.home-page h1 {
+.home-page h1, .home-page h1{
     max-width: 800px;
     margin: 0 auto 18px;
     font-family: Georgia, "Times New Roman", serif;
@@ -291,14 +291,14 @@ body {
     text-align: center;
 }
 
-.home-page .home-intro > p {
+.home-page .home-intro > p, .itinerary-intro > p{
     max-width: 580px;
     margin: 0 auto 32px;
     font-size: 1.05rem;
     text-align: center;
 }
 
-.home-page .home-search {
+.home-page .home-search, .itinerary-search {
     display: flex;
     align-items: flex-end;
     gap: 12px;
@@ -309,12 +309,12 @@ body {
     border-radius: 16px;
 }
 
-.home-page .home-field {
+.home-page .home-field, .itinerary-field{
     flex: 1;
     min-width: 0;
 }
 
-.home-page .home-field label {
+.home-page .home-field label, .itinerary-field label{
     display: block;
     margin-bottom: 7px;
     font-size: 0.875rem;
@@ -322,7 +322,7 @@ body {
 }
 
 .home-page .home-field input,
-.home-page .home-field select {
+.home-page .home-field select, .itinerary-field input, .itinerary-field select{
     width: 100%;
     min-height: 50px;
     padding: 12px 14px;
@@ -333,7 +333,7 @@ body {
     font: inherit;
 }
 
-.home-page .home-field input::placeholder {
+.home-page .home-field input::placeholder, .itinerary-field input::placeholder{
     color: var(--navy);
     opacity: 1;
 }
@@ -349,7 +349,8 @@ body {
 
 .home-page .home-button,
 .home-page .home-save-button,
-.home-page .home-details-button {
+.home-page .home-details-button,
+.itinerary-button {
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -368,7 +369,7 @@ body {
     cursor: pointer;
 }
 
-.home-page .home-search > .home-button {
+.home-page .home-search > .home-button, .itinerary-button{
     min-width: 120px;
     min-height: 50px;
 }
@@ -385,7 +386,8 @@ body {
 }
 
 .home-page .home-button:not(:disabled):hover,
-.home-page .home-details-button:not(:disabled):hover {
+.home-page .home-details-button:not(:disabled):hover,
+.itinerary-button:not(:disabled):hover {
     background-color: var(--blue);
     border-color: var(--blue);
 }
@@ -418,7 +420,7 @@ body {
     gap: 26px;
 }
 
-.home-page .home-card {
+.home-page .home-card, .itinerary_item{
     display: flex;
     flex-direction: column;
     overflow: hidden;

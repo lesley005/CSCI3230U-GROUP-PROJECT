@@ -21,7 +21,9 @@
     color: var(--navy);
     font: inherit;
 }
-
+.itinerary_page {
+    color: var(--navy);
+}
 .itinerary_body {
     width: 90%;
     max-width: 1200px;
@@ -126,4 +128,25 @@
 
 #add_custom_itinerary_event:hover {
     transform: translate(0px, 5px);
+}
+#itinerary_title {
+    margin: 24px 0 24px 0px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.8rem, 3vw, 2.3rem);
+    font-weight: 400;
+    letter-spacing: -0.5px;
+}
+#itinerary_download_button {
+  display: block;
+  width: 100%;
+  margin: 28px 0 0;
+  box-sizing: border-box;
+}
+.itinerary-filters {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    max-width: 800px;
+    margin: auto auto 28px auto;
+    padding: 0 20px;
 }

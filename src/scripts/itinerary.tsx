@@ -1,14 +1,15 @@
 import { createRoot } from "react-dom/client";
 import { ItineraryItem, RawItineraryItem } from "../types/itinerary_item";
 import { useEffect, useState } from "react";
-
+import "../itinerary.css"
+import "../style.css"
 export function read_itinerary(): ItineraryItem[] {
     let itinerary_raw_array = localStorage.getItem("itinerary")
     if (!itinerary_raw_array)
         return []
-
-    let raw_item: RawItineraryItem[] = JSON.parse(itinerary_raw_array);
-    return raw_item.map((item) => ({
+    try {
+      let raw_item: RawItineraryItem[] = JSON.parse(itinerary_raw_array);
+      return raw_item.map((item) => ({
         summary: item.summary,
         type: item.type,
         location: item.location,
@@ -17,7 +18,11 @@ export function read_itinerary(): ItineraryItem[] {
         background_url: item.background_url,
         description: item.description ? item.description : " ",
         id: item.id
-    }))
+      }))
+    } catch (err) {
+      console.log(err)
+      return []
+    }
 }
 export function add_itinerary_item(item: ItineraryItem) {
     let events: ItineraryItem[] = read_itinerary()
@@ -31,7 +36,7 @@ export function delete_itinerary_item(item: ItineraryItem | string){
 }
 
 export function format_date_as_ical(date: Date) {
-    let date_string = `${date.getFullYear().toString().padStart(4, "0")}${date.getMonth().toString().padStart(2, "0")}${date.getDay().toString().padStart(2, "0")}`
+    let date_string = `${date.getFullYear().toString().padStart(4, "0")}${(date.getMonth()+1).toString().padStart(2, "0")}${date.getDate().toString().padStart(2, "0")}`
     let time_string = `${date.getHours().toString().padStart(2, "0")}${date.getMinutes().toString().padStart(2, "0")}${date.getSeconds().toString().padStart(2, "0")}`
     return `${date_string}T${time_string}Z`
 }
@@ -45,15 +50,15 @@ export function ical_event(item: ItineraryItem) {
         `SUMMARY:${item.summary}`,
         `LOCATION:${item.location}`,
         `DESCRIPTION:${item.description}`,
-        `END:VEVENT`].join("\n")
+        `END:VEVENT`].join("\r\n")
     return content
 }
 export function generate_ical(items: ItineraryItem[]) {
     let content = [`BEGIN:VCALENDAR`,
         `VERSION:2.0`,
         `PRODID:-//Journeys Uncharted//Itinerary`,
-        `${items.map((item) => ical_event(item)).join("\n")}`,
-        `END:VCALENDAR`].join("\n")
+        `${items.map((item) => ical_event(item)).join("\r\n")}`,
+        `END:VCALENDAR`].join("\r\n")
     return content
 }
 export function export_as_ical(items: ItineraryItem[]) {
@@ -68,6 +73,9 @@ export function export_as_ical(items: ItineraryItem[]) {
 }
 export function ItineraryPage(): React.JSX.Element {
     const [itinerary, set_itinerary] = useState(read_itinerary)
+    const [current_search, set_search] = useState("")
+    const [current_type_filter, set_selected_filter] = useState("All types")
+    const type_filters = ["All types", ...new Set(itinerary.map((item) => item.type))]
     function add_itinerary_item(item: ItineraryItem) {
         let updated = [...itinerary, item]
         set_itinerary(updated)
@@ -96,24 +104,63 @@ export function ItineraryPage(): React.JSX.Element {
         set_itinerary(updated)
         localStorage.setItem("itinerary", JSON.stringify(updated))
     }
-    let update = () => {
-        console.log("Updating itinerary")
-        set_itinerary(read_itinerary())
-        window.removeEventListener("itinerary_updated", update)
-    }
-    window.addEventListener("itinerary_updated", update)
-    return (
-        <section>
-            <ItineraryEventList itinerary={itinerary} onDelete={on_delete_event}></ItineraryEventList>
-            <div onClick={() => {
-                show_add_event_form()
-            }} id="add_custom_itinerary_event">
-                <span>+</span>
-            </div>
-            <input type="button" onClick={() => {
-                console.log(export_as_ical(itinerary))
-            }} value="Download" />
+    useEffect(() => {
+      let update = () => {
+          console.log("Updating itinerary")
+          set_itinerary(read_itinerary())
+          window.removeEventListener("itinerary_updated", update)
+      }
+      window.addEventListener("itinerary_updated", update)
+    }, [])
+  return (
+      <main className="itinerary-main">
+        <section className="itinerary-intro">
+        <h1 id="itinerary-title">Plan your trip!</h1>
+        <p>
+          Keep track of events and places you've scheduled!
+        </p>
+
+        <div className="itinerary-filters">
+          <div className="itinerary-field">
+            <label htmlFor="searchbar">Search itinerary</label>
+            <input
+              id="searchbar"
+              type="search"
+              placeholder="Search for an event"
+              value={current_search}
+            onChange={(event) => {
+              set_search(event.target.value)
+            }}
+            />
+          </div>
+          <div className="itinerary-field">
+            <label htmlFor="itinerary-country">Type</label>
+            <select
+              id="itinerary-type-filter"
+              value={current_type_filter}
+              onChange={(event) => set_selected_filter(event.target.value)}
+            >
+              {type_filters.map((type) => (
+                  <option key={type} value={type}>{type}</option>
+              ))}
+            </select>
+          </div>
+
+        </div>
+        <ItineraryEventList itinerary={itinerary} onDelete={on_delete_event} search_filter={current_search} type_filter={current_type_filter}></ItineraryEventList>
+          <button id="itinerary_download_button" className="itinerary-button" onClick={() => {
+              console.log(export_as_ical(itinerary))
+          }}>
+            Download
+          </button>
+          <div onClick={() => {
+              show_add_event_form()
+          }} id="add_custom_itinerary_event">
+              <span>+</span>
+          </div>
+
         </section>
+      </main>
     )
 }
 interface ItineraryAddEventFormProps {
@@ -146,7 +193,7 @@ function ItineraryAddEventForm({ onSubmit, onClose, defaultValues}: ItineraryAdd
             </div>
             <div className="create_event_form_section">
                 <label htmlFor="create_event_date_end">End</label>
-                <input type="datetime-local" defaultValue={defaultValues?.start?.toISOString().substring(0, 16) ?? new Date().toISOString().substring(0, 16)} id="create_event_date_end" name="end" />
+                <input type="datetime-local" defaultValue={defaultValues?.end?.toISOString().substring(0, 16) ?? new Date().toISOString().substring(0, 16)} id="create_event_date_end" name="end" />
             </div>
             <div className="create_event_form_section">
                 <input id="create_event_close_button" value="Cancel" type="button" onClick={onClose} />
@@ -155,6 +202,21 @@ function ItineraryAddEventForm({ onSubmit, onClose, defaultValues}: ItineraryAdd
         </form>
     );
 }
+/**
+ * Display a full-screen popup form that on submission will add an event to the itinerary
+ * Example usage:
+ * ```javascript
+ * show_add_event_form({
+ *   summary: "Event title",
+ *   type: "Example Event",
+ *   description: "A description of the event",
+ *   location: "The location the event is at",
+ *   start: new Date(2026, 11, 1, 13, 30, 0),
+ *   end: new Date(2026, 11, 1, 14, 30, 0)
+ * })
+ * ```
+ * @param defaults Optional default values to add to the form's input fields
+ */
 // AI-generated code (Hydrogen Thinking 4 Education): See AI-USAGE.md entry #3
 export function show_add_event_form(
     defaults?: Partial<ItineraryItem>,
@@ -206,23 +268,15 @@ export function show_add_event_form(
 
 interface ItineraryListProps {
     itinerary: ItineraryItem[],
-    onDelete: (item: ItineraryItem|string) => void
+    onDelete: (item: ItineraryItem | string) => void
+    type_filter: string,
+    search_filter: string
 }
-export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps): React.JSX.Element {
-    const [selected_filter, set_selected_filter] = useState("All types")
-    const type_filters = ["All types", ...new Set(itinerary.map((item) => item.type))]
+export function ItineraryEventList({ itinerary, onDelete, type_filter, search_filter}: ItineraryListProps): React.JSX.Element {
     return itinerary.length > 0 ? (
         <section>
-            <div id="itinerary_type_filter_container">
-                <label htmlFor="itinerary_type_filter">Type</label>
-                <select id="itinerary_type_filter" onChange={(event) => set_selected_filter(event.target.value)}>
-                    {type_filters.map((type) => (
-                        <option key={type} value={type}>{type}</option>
-                    ))}
-                </select>
-            </div>
             <div id="itinerary_events">
-                {itinerary.filter(item => selected_filter === "All types" || selected_filter === item.type).map((item) => (
+                {itinerary.filter(item => type_filter === "All types" || type_filter === item.type).filter(item => item.summary.toLowerCase().indexOf(search_filter.toLowerCase()) != -1).map((item) => (
                     <div className="itinerary_item" key={item.id}>
                         <div className="itinerary_item_header">
                             <span className="itinerary_item_title"><b>{item.summary}</b></span>
@@ -233,7 +287,7 @@ export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps):
                             <span className="itinerary_item_location">{item.location}</span>
                             <span className="itinerary_item_date">{item.start.getDate() === item.end.getDate() ? `${item.start.toLocaleDateString()} ${item.start.toLocaleTimeString()} - ${item.end.toLocaleTimeString()}` : `${item.start.toLocaleString()} - ${item.end.toLocaleString()}`}</span>
                         </div>
-                        <span className="itinerary_delete_icon" onClick={() => {onDelete(item.id)}}>
+                        <span className="itinerary_delete_icon" title="Delete" onClick={() => {onDelete(item.id)}}>
                             &times;
                         </span>
                     </div>
@@ -260,3 +314,4 @@ export function ItineraryEventList({ itinerary, onDelete }: ItineraryListProps):
         </section>
     )
 }
+export default ItineraryPage;
