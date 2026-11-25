@@ -1,8 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { ItineraryItem, RawItineraryItem } from "../types/itinerary_item";
 import { useEffect, useState } from "react";
-import "/itinerary.css"
-import "/style.css"
+import "../itinerary.css"
+import "../style.css"
 export function read_itinerary(): ItineraryItem[] {
     let itinerary_raw_array = localStorage.getItem("itinerary")
     if (!itinerary_raw_array)
