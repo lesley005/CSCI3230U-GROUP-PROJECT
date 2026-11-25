@@ -3,10 +3,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, cleanup } from "@testing-library/react";
 import { MemoryRouter, Routes, Route } from "react-router-dom";
 import DestinationDetailsRoute from "../src/components/DestinationDetailsRoute.jsx";
-import { getGeoNamesDestination } from "../src/services/geoNamesDetailService.js";
+import { getGeoNamesDestination, getGeoNamesPlaces } from "../src/services/geoNamesDetailService.js";
 
 vi.mock("../src/services/geoNamesDetailService.js", () => ({
-  getGeoNamesDestination: vi.fn()
+  getGeoNamesDestination: vi.fn(),
+  getGeoNamesPlaces: vi.fn()
 }));
 
 vi.mock("../src/services/destinationService.ts", () => ({
@@ -27,7 +28,11 @@ function renderDestination(id) {
 }
 
 beforeEach(() => {
-  vi.clearAllMocks();
+  vi.resetAllMocks();
+  getGeoNamesPlaces.mockResolvedValue({
+    activities: [],
+    restaurants: []
+  });
 });
 
 afterEach(() => {
@@ -47,15 +52,45 @@ describe("GeoNames destination routes", () => {
       restaurants: []
     });
 
+    getGeoNamesPlaces.mockResolvedValue({
+      activities: [
+        { id: 1, name: "Sample Attraction" }
+      ],
+      restaurants: []
+    });
+
     renderDestination("geonames-2988507");
 
     expect(await screen.findByText("About Paris")).toBeTruthy();
-    expect(screen.getByText("Sample Attraction")).toBeTruthy();
+    expect(await screen.findByText("Sample Attraction")).toBeTruthy();
 
     expect(getGeoNamesDestination).toHaveBeenCalledWith(
       "geonames-2988507",
       expect.any(AbortSignal)
     );
+  });
+
+  it("shows Paris before nearby places finish loading", async () => {
+    getGeoNamesDestination.mockResolvedValue({
+      id: "geonames-2988507",
+      name: "Paris",
+      country: "France",
+      description: "Paris is a city in France.",
+      coordinates: { lat: 48.85, lon: 2.35 },
+      activities: [],
+      restaurants: []
+    });
+
+    getGeoNamesPlaces.mockImplementation(
+      () => new Promise(() => {})
+    );
+
+    renderDestination("geonames-2988507");
+
+    expect(await screen.findByText("About Paris")).toBeTruthy();
+    expect(
+      screen.getByText("Loading nearby attractions and restaurants...")
+    ).toBeTruthy();
   });
 
   it("shows a 404 when a GeoNames city is not found", async () => {

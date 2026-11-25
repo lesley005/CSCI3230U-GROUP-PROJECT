@@ -108,6 +108,7 @@ function HomeDestinationCard({
         <Link
           className="home-details-button"
           to={`/destinations/${encodeURIComponent(destination.id)}`}
+              state={{ destination }}
         >
           View Details
         </Link>
